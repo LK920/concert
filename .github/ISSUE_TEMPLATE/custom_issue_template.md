@@ -1,7 +1,7 @@
 ---
 name: "✨ 이슈 템플릿"
 about: 기능 이슈 템플릿
-title: "✨ **제목**"
+title: "✨ **이슈**"
 labels: "Feature"
 assignees: '' 
 ---
