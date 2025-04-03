@@ -88,6 +88,66 @@
 </details>
 
 ---
+### [api명세서](./docs/openapi.yaml) : swagger yaml 파일 첨부
+ 
+<details>
+<summary>토큰발급 api </summary>
+<div markdown="1">
+
+- ![토큰발급api](./docs/images/mockApi/token_api.png)
+</div>
+</details>
+<details>
+<summary>대기번호 api</summary>
+<div markdown="1">
+
+![대기번호api](./docs/images/mockApi/queue_api.png)
+</div>
+</details>
+
+<details>
+<summary>이용가능 날짜 api </summary>
+<div markdown="1">
+
+![이용가능날짜api](./docs/images/mockApi/date_api.png)
+</div>
+</details>
+<details>
+<summary>이용가능 좌석 api</summary>
+<div markdown="1">
+
+![이용가능좌석api](./docs/images/mockApi/seats_api.png)
+</div>
+</details>
+<details>
+<summary>예약신청 api</summary>
+<div markdown="1">
+
+![예약신청api](./docs/images/mockApi/reservation_api.png)
+</div>
+</details>
+<details>
+<summary>결제하기 api</summary>
+<div markdown="1">
+
+![결제하기api](./docs/images/mockApi/payment_api.png)
+</div>
+</details>
+<details>
+<summary>포인트 조회 api</summary>
+<div markdown="1">
+
+![포인트조회api](./docs/images/mockApi/point_api.png)
+</div>
+</details>
+<details>
+<summary>포인트 충전 api</summary>
+<div markdown="1">
+
+![포인트충전api](./docs/images/mockApi/charge_api.png)
+</div>
+</details>
+
 
 ## Getting Started
 

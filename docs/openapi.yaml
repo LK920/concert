@@ -1,0 +1,268 @@
+openapi: 3.0.0
+info:
+  title: Concert Reservation API
+  version: 1.0.0
+paths:
+  /token:
+    post:
+      summary: 토큰 발급
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: string
+              example:
+                uuid: "user-1234"
+      responses:
+        '200':
+          description: 토큰 발급 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+              example:
+                token: "abcd1234xyz"
+        '400':
+          description: 잘못된 요청
+        '500':
+          description: 서버 오류
+
+  /queue:
+    post:
+      summary: 대기번호 조회
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 대기번호 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  queueNumber:
+                    type: integer
+                  remainingTime:
+                    type: string
+              example:
+                queueNumber: 5
+                remainingTime: "10 minutes"
+        '400':
+          description: 잘못된 요청
+        '401':
+          description: 인증 실패
+        '500':
+          description: 서버 오류
+
+  /concert/dates:
+    get:
+      summary: 이용가능 날짜 조회
+      responses:
+        '200':
+          description: 이용 가능한 날짜 목록 반환
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - "2025-05-01"
+                - "2025-05-02"
+        '500':
+          description: 서버 오류
+
+  /concert/seats:
+    get:
+      summary: 이용가능 좌석 조회
+      parameters:
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 이용 가능한 좌석 목록 반환
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    seatNumber:
+                      type: integer
+                    price:
+                      type: integer
+              example:
+                - seatNumber: 101
+                  price: 50000
+                - seatNumber: 102
+                  price: 60000
+        '400':
+          description: 잘못된 요청
+        '500':
+          description: 서버 오류
+
+  /reservation:
+    post:
+      summary: 예약 신청
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                date:
+                  type: string
+                seat:
+                  type: integer
+                price:
+                  type: integer
+      responses:
+        '200':
+          description: 예약 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservationId:
+                      type: integer
+                  date:
+                    type: string
+                  seat:
+                    type: integer
+                  status:
+                    type: string
+              example:
+                reservationId: 1234
+                date: "2025-05-01"
+                seat: 101
+                status: "COMPLETE"
+        '400':
+          description: 잘못된 요청
+        '402':
+          description: 잔액 부족
+        '500':
+          description: 서버 오류
+
+  /payment:
+    post:
+      summary: 결제 하기
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                reservationId:
+                  type: integer
+      responses:
+        '200':
+          description: 결제 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservationId:
+                    type: integer
+                  date:
+                    type: string
+                  seat:
+                    type: integer
+                  status:
+                    type: string
+              example:
+                reservationId: 1234
+                date: "2025-05-01"
+                seat: 101
+                status: "COMPLETE"
+        '400':
+          description: 잘못된 요청
+        '402':
+          description: 잔액 부족
+        '500':
+          description: 서버 오류
+
+  /point:
+    get:
+      summary: 포인트 조회
+      parameters:
+        - name: uuid
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 포인트 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                  point:
+                    type: integer
+              example:
+                uuid: "user-1234"
+                point: 10000
+        '400':
+          description: 잘못된 요청
+        '500':
+          description: 서버 오류
+
+  /point/charge:
+    post:
+      summary: 포인트 충전
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                amount:
+                  type: integer
+      responses:
+        '200':
+          description: 충전 후 포인트 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                  point:
+                    type: integer
+              example:
+                uuid: "user-1234"
+                point: 15000
+        '400':
+          description: 잘못된 요청
+        '500':
+          description: 서버 오류
