@@ -1,4 +1,4 @@
-## 프로젝트
+## 콘서트 대기열 프로젝트
 <details>
 <summary>프로젝트 개요 및 요구사항</summary>
 <div markdown="1">
