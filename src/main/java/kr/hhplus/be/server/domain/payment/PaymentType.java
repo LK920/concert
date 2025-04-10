@@ -1,4 +1,5 @@
 package kr.hhplus.be.server.domain.payment;
 
-public enum paymentType {
+public enum PaymentType {
+    CHARGE, USE
 }

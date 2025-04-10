@@ -1,17 +1,26 @@
 package kr.hhplus.be.server.domain.seat;
 
-import kr.hhplus.be.server.domain.concert.SeatStatus;
+import jakarta.persistence.*;
+import kr.hhplus.be.server.domain.BaseTimeEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class ConcertSeat {
-    private final Long concertSeatId;
-    private final Long concertDateId;
-    private final Long concertSeatNumber;
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Seat extends BaseTimeEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private long concertDateId;
+    private long concertSeatNumber;
+
+    @Enumerated(EnumType.STRING)
     private SeatStatus seatStatus;
     private long concertSeatPrice;
 
-    public ConcertSeat(Long concertSeatId, Long concertDateId, Long concertSeatNumber, long concertSeatPrice){
+    private Seat(long concertDateId, long concertSeatNumber, long concertSeatPrice){
         if(concertSeatPrice <= 0){
             throw new IllegalArgumentException("가격은 1 이상이어야 합니다.");
         }
@@ -20,12 +29,14 @@ public class ConcertSeat {
             throw new IllegalArgumentException("좌석 상태는 ");
         }
 
-        this.concertSeatId = concertSeatId;
         this.concertDateId = concertDateId;
         this.concertSeatNumber = concertSeatNumber;
         this.seatStatus = SeatStatus.ENABLE;
         this.concertSeatPrice = concertSeatPrice;
+    }
 
+    public static Seat create(long concertDateId, long concertSeatNumber, long concertSeatPrice){
+        return new Seat(concertDateId, concertSeatNumber, concertSeatPrice);
     }
 
     public void reserveSeat() {

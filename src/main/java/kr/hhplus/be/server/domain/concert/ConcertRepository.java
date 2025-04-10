@@ -1,4 +1,7 @@
 package kr.hhplus.be.server.domain.concert;
 
-public interface ConcertRespository {
+import java.util.List;
+
+public interface ConcertRepository{
+    List<Concert> findAll();
 }
