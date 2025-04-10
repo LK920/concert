@@ -6,13 +6,13 @@ import lombok.Value;
 
 @Value
 public class ConcertName {
-    String value;
+    String concertName;
 
-    public ConcertName(String value){
-        if(value == null || value.trim().isEmpty()){
+    public ConcertName(String concertName){
+        if(concertName == null || concertName.trim().isEmpty()){
             throw new IllegalArgumentException("콘서트 이름은 필수입니다.");
         }
-        this.value = value;
+        this.concertName = concertName;
     }
 
 }

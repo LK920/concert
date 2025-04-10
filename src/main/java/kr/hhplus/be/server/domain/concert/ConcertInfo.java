@@ -6,6 +6,6 @@ public record ConcertInfo(
         long concertTotalSeat
 ) {
     public static ConcertInfo from(Concert concert){
-        return new ConcertInfo(concert.getId(), concert.getConcertName().getValue(), concert.getConcertTotalSeat().getValue());
+        return new ConcertInfo(concert.getId(), concert.getConcertName().getConcertName(), concert.getConcertTotalSeat().getConcertTotalSeat());
     }
 }
