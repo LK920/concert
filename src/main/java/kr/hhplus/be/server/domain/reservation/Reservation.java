@@ -44,7 +44,7 @@ public class Reservation extends BaseTimeEntity {
         }
 
         if (this.paymentId == null) {
-            throw new IllegalStateException("결제 내역이 추가되지 않았습니다.");
+            throw new IllegalArgumentException("결제 내역이 추가되지 않았습니다.");
         }
 
         this.reservationStatus = ReservationStatus.COMPLETE;
@@ -52,7 +52,7 @@ public class Reservation extends BaseTimeEntity {
 
     public void addPaymentId(Long paymentId) {
         if (this.paymentId != null) {
-            throw new IllegalStateException("이미 결제가 완료된 예약입니다.");
+            throw new IllegalArgumentException("이미 결제가 완료된 예약입니다.");
         }
 
         this.paymentId = paymentId;

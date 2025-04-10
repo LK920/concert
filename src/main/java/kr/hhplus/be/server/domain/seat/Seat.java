@@ -25,10 +25,6 @@ public class Seat extends BaseTimeEntity {
             throw new IllegalArgumentException("가격은 1 이상이어야 합니다.");
         }
 
-        if(seatStatus == null){
-            throw new IllegalArgumentException("좌석 상태는 ");
-        }
-
         this.concertDateId = concertDateId;
         this.concertSeatNumber = concertSeatNumber;
         this.seatStatus = SeatStatus.ENABLE;
@@ -41,14 +37,14 @@ public class Seat extends BaseTimeEntity {
 
     public void reserveSeat() {
         if (this.seatStatus != SeatStatus.ENABLE) {
-            throw new IllegalStateException("예약할 수 없는 좌석입니다.");
+            throw new IllegalArgumentException("예약할 수 없는 좌석입니다.");
         }
         this.seatStatus = SeatStatus.DISABLE;
     }
 
     public void cancelSeatReservation(){
         if (this.seatStatus != SeatStatus.DISABLE) {
-            throw new IllegalStateException("이미 취소된 좌석입니다.");
+            throw new IllegalArgumentException("이미 취소된 좌석입니다.");
         }
         this.seatStatus = SeatStatus.ENABLE;
     }

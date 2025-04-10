@@ -43,7 +43,4 @@ public class ConcertDate extends BaseTimeEntity {
         this.isAvailable = true;
     }
 
-    public boolean isPastDate(){
-        return this.concertDate.isBefore(LocalDateTime.now());
-    }
 }
