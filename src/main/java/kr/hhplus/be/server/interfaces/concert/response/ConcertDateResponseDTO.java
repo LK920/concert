@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.concert.dto;
+package kr.hhplus.be.server.interfaces.concert.response;
 
 import kr.hhplus.be.server.domain.concertDate.ConcertDateInfo;
 

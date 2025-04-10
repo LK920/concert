@@ -1,4 +1,8 @@
 package kr.hhplus.be.server.interfaces.reservation.request;
 
-public record reserveRequestDTO() {
+public record ReserveRequestDTO(
+        long userId,
+        long seatId,
+        long seatPrice
+) {
 }

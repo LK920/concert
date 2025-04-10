@@ -1,4 +1,4 @@
 package kr.hhplus.be.server.interfaces.point.request;
 
-public record PointChargeRequestDTO(long userId, long amount) {
+public record PointRequestDTO(long userId, long amount) {
 }

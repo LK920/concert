@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.concert.dto;
+package kr.hhplus.be.server.interfaces.concert.response;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;

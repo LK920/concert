@@ -1,4 +1,11 @@
 package kr.hhplus.be.server.interfaces.reservation.response;
 
-public record ReserveResponseDTO() {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public record ReserveResponseDTO(
+        long reservationId,
+        long userId,
+        long seatId,
+        String reservationStatus
+) {
 }
