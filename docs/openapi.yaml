@@ -1,268 +1,206 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
-  title: Concert Reservation API
-  version: 1.0.0
+  title: 콘서트 예약 서비스 api
+  description: 콘서트 시스템 api 명세서입니다.
+  contact:
+    name: Larry
+    url: https://github.com/LK920
+    email: hopeone1214@gmail.com
+  license:
+    name: MIT Licence
+    url: https://opensource.org/licenses/MIT
+  version: v1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+tags:
+  - name: 콘서트 api
+    description: 콘서트 조회, 날짜를 조회하는 역할을 한다.
 paths:
-  /token:
+  /reservation/reserve:
     post:
-      summary: 토큰 발급
+      tags:
+        - 콘서트 예약 / 예약 내역 조회 api
+      summary: 콘서트를 예약한다
+      description: 콘서트 리퀘스트 객체를 받아 콘서트 예약을 한다.
+      operationId: reserveConcert
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                uuid:
-                  type: string
-              example:
-                uuid: "user-1234"
-      responses:
-        '200':
-          description: 토큰 발급 성공
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-              example:
-                token: "abcd1234xyz"
-        '400':
-          description: 잘못된 요청
-        '500':
-          description: 서버 오류
-
-  /queue:
-    post:
-      summary: 대기번호 조회
-      parameters:
-        - name: token
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 대기번호 반환
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  queueNumber:
-                    type: integer
-                  remainingTime:
-                    type: string
-              example:
-                queueNumber: 5
-                remainingTime: "10 minutes"
-        '400':
-          description: 잘못된 요청
-        '401':
-          description: 인증 실패
-        '500':
-          description: 서버 오류
-
-  /concert/dates:
-    get:
-      summary: 이용가능 날짜 조회
-      responses:
-        '200':
-          description: 이용 가능한 날짜 목록 반환
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-              example:
-                - "2025-05-01"
-                - "2025-05-02"
-        '500':
-          description: 서버 오류
-
-  /concert/seats:
-    get:
-      summary: 이용가능 좌석 조회
-      parameters:
-        - name: date
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 이용 가능한 좌석 목록 반환
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    seatNumber:
-                      type: integer
-                    price:
-                      type: integer
-              example:
-                - seatNumber: 101
-                  price: 50000
-                - seatNumber: 102
-                  price: 60000
-        '400':
-          description: 잘못된 요청
-        '500':
-          description: 서버 오류
-
-  /reservation:
-    post:
-      summary: 예약 신청
-      requestBody:
+              $ref: '#/components/schemas/ReserveRequestDTO'
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                uuid:
-                  type: string
-                date:
-                  type: string
-                seat:
-                  type: integer
-                price:
-                  type: integer
       responses:
         '200':
-          description: 예약 성공
+          description: OK
           content:
-            application/json:
+            '*/*':
               schema:
-                type: object
-                properties:
-                  reservationId:
-                      type: integer
-                  date:
-                    type: string
-                  seat:
-                    type: integer
-                  status:
-                    type: string
-              example:
-                reservationId: 1234
-                date: "2025-05-01"
-                seat: 101
-                status: "COMPLETE"
-        '400':
-          description: 잘못된 요청
-        '402':
-          description: 잔액 부족
-        '500':
-          description: 서버 오류
-
-  /payment:
-    post:
-      summary: 결제 하기
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                uuid:
-                  type: string
-                reservationId:
-                  type: integer
-      responses:
-        '200':
-          description: 결제 성공
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  reservationId:
-                    type: integer
-                  date:
-                    type: string
-                  seat:
-                    type: integer
-                  status:
-                    type: string
-              example:
-                reservationId: 1234
-                date: "2025-05-01"
-                seat: 101
-                status: "COMPLETE"
-        '400':
-          description: 잘못된 요청
-        '402':
-          description: 잔액 부족
-        '500':
-          description: 서버 오류
-
-  /point:
-    get:
-      summary: 포인트 조회
-      parameters:
-        - name: uuid
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 포인트 반환
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  uuid:
-                    type: string
-                  point:
-                    type: integer
-              example:
-                uuid: "user-1234"
-                point: 10000
-        '400':
-          description: 잘못된 요청
-        '500':
-          description: 서버 오류
-
+                $ref: '#/components/schemas/ReserveResponseDTO'
   /point/charge:
     post:
+      tags:
+        - 포인트 조회/충전 api
       summary: 포인트 충전
+      description: userId와 amount를 파라미터로 포인트 충전한다
+      operationId: chargeUserPoint
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                uuid:
-                  type: string
-                amount:
-                  type: integer
+              $ref: '#/components/schemas/PointRequestDTO'
+        required: true
       responses:
         '200':
-          description: 충전 후 포인트 반환
+          description: OK
           content:
-            application/json:
+            '*/*':
               schema:
-                type: object
-                properties:
-                  uuid:
-                    type: string
-                  point:
-                    type: integer
-              example:
-                uuid: "user-1234"
-                point: 15000
-        '400':
-          description: 잘못된 요청
-        '500':
-          description: 서버 오류
+                $ref: '#/components/schemas/PointResponseDTO'
+  /point/{userId}:
+    get:
+      tags:
+        - 포인트 조회/충전 api
+      summary: 포인트 조회
+      description: userId를 파라미터를 받아 해당 유저의 포인트를 조회한다
+      operationId: getUserPoint
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PointResponseDTO'
+  /concert/{dateId}/seat:
+    get:
+      tags:
+        - 콘서트 api
+      summary: 예약 가능한 콘서트 좌석 조회 api
+      description: 파라미터로 dateId 받는다
+      operationId: getConcertAvailableSeats
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConcertSeatResponseDTO'
+  /concert/{concertId}/date:
+    get:
+      tags:
+        - 콘서트 api
+      summary: 예약 가능한 콘서트 날짜 조회 api
+      description: 파라미터로 concertId를 받는다
+      operationId: getConcertAvailableDates
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConcertDateResponseDTO'
+  /concert/list:
+    get:
+      tags:
+        - 콘서트 api
+      summary: 예약 가능한 콘서트를 조회 api
+      operationId: getConcerts
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConcertResponseDTO'
+components:
+  schemas:
+    ReserveRequestDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        seatId:
+          type: integer
+          format: int64
+        seatPrice:
+          type: integer
+          format: int64
+    ReserveResponseDTO:
+      type: object
+      properties:
+        reservationId:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        seatId:
+          type: integer
+          format: int64
+        reservationStatus:
+          type: string
+    PointRequestDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        amount:
+          type: integer
+          format: int64
+    PointResponseDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        userPoint:
+          type: integer
+          format: int64
+    ConcertSeatResponseDTO:
+      type: object
+      properties:
+        concertSeatId:
+          type: integer
+          format: int64
+        concertSeatNumber:
+          type: integer
+          format: int64
+        concertSeatPrice:
+          type: integer
+          format: int64
+    ConcertDateResponseDTO:
+      type: object
+      properties:
+        concertDateId:
+          type: integer
+          format: int64
+        concertDate:
+          type: string
+    ConcertResponseDTO:
+      type: object
+      properties:
+        concertId:
+          type: integer
+          format: int64
+          description: 콘서트 id
+          example: 1
+        concertName:
+          type: string
+          description: 콘서트 이름
+          example: 2025MusicConcert
+        concertTotalSeats:
+          type: integer
+          format: int64
+          description: '콘서트 총 좌석 수 '
+          example: 50
