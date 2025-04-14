@@ -21,7 +21,7 @@ class ConcertTotalSeatTest {
     @DisplayName("콘서트 좌석수 생성")
     void concertTotalSeat(){
         ConcertTotalSeat totalSeat = new ConcertTotalSeat(50);
-        assertThat(totalSeat.getValue()).isEqualTo(50);
+        assertThat(totalSeat.getConcertTotalSeat()).isEqualTo(50);
     }
 
     @Test
@@ -30,7 +30,7 @@ class ConcertTotalSeatTest {
         ConcertTotalSeat totalSeat = new ConcertTotalSeat(20);
         ConcertTotalSeat increased = totalSeat.increase(10);
 
-        assertThat(increased.getValue()).isEqualTo(30);
+        assertThat(increased.getConcertTotalSeat()).isEqualTo(30);
 
     }
 
@@ -40,7 +40,7 @@ class ConcertTotalSeatTest {
         ConcertTotalSeat totalSeat = new ConcertTotalSeat(30);
         ConcertTotalSeat decreased = totalSeat.decrease(10);
 
-        assertThat(decreased.getValue()).isEqualTo(20);
+        assertThat(decreased.getConcertTotalSeat()).isEqualTo(20);
     }
 
     @Test

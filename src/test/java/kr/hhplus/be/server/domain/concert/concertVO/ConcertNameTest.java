@@ -29,7 +29,7 @@ class ConcertNameTest {
     @DisplayName("콘서트 이름 정상 생성")
     void concertName(){
         ConcertName concertName = new ConcertName("정상 생성 콘서트");
-        assertThat(concertName.getValue()).isEqualTo("정상 생성 콘서트");
+        assertThat(concertName.getConcertName()).isEqualTo("정상 생성 콘서트");
     }
 
 }

@@ -20,8 +20,8 @@ class ConcertTest {
         Concert concert = Concert.create(concertName, totalSeats);
 
         // then
-        assertThat(concert.getConcertName().getValue()).isEqualTo(concertName);
-        assertThat(concert.getConcertTotalSeat().getValue()).isEqualTo(totalSeats);
+        assertThat(concert.getConcertName().getConcertName()).isEqualTo(concertName);
+        assertThat(concert.getConcertTotalSeat().getConcertTotalSeat()).isEqualTo(totalSeats);
     }
 
     @Test
@@ -29,7 +29,7 @@ class ConcertTest {
     void changeConcertName() {
         Concert concert = Concert.create("oldName", 1);
         concert.changeConcertName("newName");
-        assertThat(concert.getConcertName().getValue()).isEqualTo("newName");
+        assertThat(concert.getConcertName().getConcertName()).isEqualTo("newName");
     }
 
     @Test
@@ -37,7 +37,7 @@ class ConcertTest {
     void increaseSeats() {
         Concert concert = Concert.create("concertName", 50);
         concert.increaseSeats(40);
-        assertThat(concert.getConcertTotalSeat().getValue()).isEqualTo(90);
+        assertThat(concert.getConcertTotalSeat().getConcertTotalSeat()).isEqualTo(90);
     }
 
     @Test
@@ -45,7 +45,7 @@ class ConcertTest {
     void decreaseSeats() {
         Concert concert = Concert.create("concertName", 50);
         concert.decreaseSeats(40);
-        assertThat(concert.getConcertTotalSeat().getValue()).isEqualTo(10);
+        assertThat(concert.getConcertTotalSeat().getConcertTotalSeat()).isEqualTo(10);
     }
 
 
