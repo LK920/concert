@@ -5,6 +5,8 @@ import kr.hhplus.be.server.domain.queue.WaitingQueueRepository;
 import kr.hhplus.be.server.domain.queue.WaitingQueueStatus;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class WaitingQueueRepositoryImpl implements WaitingQueueRepository {
     @Override
@@ -25,5 +27,15 @@ public class WaitingQueueRepositoryImpl implements WaitingQueueRepository {
     @Override
     public long countByStatusAndIdLessThan(WaitingQueueStatus waitingQueueStatus, long id) {
         return 0;
+    }
+
+    @Override
+    public List<WaitingQueue> findAllNotExpired() {
+        return List.of();
+    }
+
+    @Override
+    public void saveAll(List<WaitingQueue> expiredQueue) {
+
     }
 }

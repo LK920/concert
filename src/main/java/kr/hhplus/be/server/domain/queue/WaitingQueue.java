@@ -34,12 +34,16 @@ public class WaitingQueue extends BaseTimeEntity {
         return new WaitingQueue(token, userId,now);
     }
 
-    public void isActived(){
+    public boolean isExpired(LocalDateTime now){
+        return this.expiredAt.isBefore(now);
+    }
+
+    public void activate(){
         if(this.status != WaitingQueueStatus.WAITING){throw new IllegalArgumentException("대기 상태가 아닙니다.");}
         this.status = WaitingQueueStatus.ACTIVE;
     }
 
-    public void isExpired(){
+    public void expire(){
         if(this.status == WaitingQueueStatus.EXPIRED){throw new IllegalArgumentException("이미 만료된 상태입니다.");}
         this.status = WaitingQueueStatus.EXPIRED;
     }

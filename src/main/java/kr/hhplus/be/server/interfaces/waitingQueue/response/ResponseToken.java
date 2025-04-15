@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.waitingQueue.dto;
+package kr.hhplus.be.server.interfaces.waitingQueue.response;
 
 public record ResponseToken(
         long userId,

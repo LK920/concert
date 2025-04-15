@@ -27,29 +27,29 @@ class WaitingQueueTest {
     }
 
     @Test
-    void isActived() {
+    void activate() {
         // given
         String token = "token-uuid";
         long userId = 1l;
         LocalDateTime datetime = LocalDateTime.now();
         WaitingQueue queue = WaitingQueue.create(token,userId,datetime);
-        queue.isActived();
+        queue.activate();
 
         //when & then
-        assertThatThrownBy(()->queue.isActived()).isInstanceOf(IllegalArgumentException.class)
+        assertThatThrownBy(()->queue.activate()).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("대기 상태가 아닙니다.");
     }
 
     @Test
-    void isExpired() {
+    void expire() {
         String token = "token-uuid";
         long userId = 1l;
         LocalDateTime datetime = LocalDateTime.now();
         WaitingQueue queue = WaitingQueue.create(token,userId,datetime);
-        queue.isExpired();
+        queue.expire();
 
         //when & then
-        assertThatThrownBy(()->queue.isExpired()).isInstanceOf(IllegalArgumentException.class)
+        assertThatThrownBy(()->queue.expire()).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 만료된 상태입니다.");
     }
 }

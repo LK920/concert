@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.application.waitingQueue;
 
 import kr.hhplus.be.server.domain.queue.WaitingQueue;
+import kr.hhplus.be.server.domain.queue.WaitingQueueDetail;
 import kr.hhplus.be.server.domain.queue.WaitingQueueInfo;
 import kr.hhplus.be.server.domain.queue.WaitingQueueService;
 import kr.hhplus.be.server.domain.user.User;
@@ -13,13 +14,12 @@ import org.springframework.stereotype.Service;
 public class WaitingQueueFacade {
 
     private final WaitingQueueService waitingQueue;
-    private final UserService userService;
 
     public WaitingQueueInfo createWaitingQueue(long userId){
         return waitingQueue.createWaitingQueue(userId);
     }
 
-    public WaitingQueueInfo getWaitingQueue(String token){
+    public WaitingQueueDetail getWaitingQueue(String token){
         return waitingQueue.getWaitingQueue(token);
     }
 

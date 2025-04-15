@@ -1,8 +1,11 @@
 package kr.hhplus.be.server.interfaces.waitingQueue;
 
 import kr.hhplus.be.server.application.waitingQueue.WaitingQueueFacade;
+import kr.hhplus.be.server.domain.queue.WaitingQueueDetail;
 import kr.hhplus.be.server.domain.queue.WaitingQueueInfo;
-import kr.hhplus.be.server.interfaces.waitingQueue.dto.ResponseToken;
+import kr.hhplus.be.server.interfaces.waitingQueue.request.RequestToken;
+import kr.hhplus.be.server.interfaces.waitingQueue.response.ResponseQueue;
+import kr.hhplus.be.server.interfaces.waitingQueue.response.ResponseToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +25,12 @@ public class WaitingQueueController implements WaitingQueueApi {
         return ResponseEntity.ok(result);
     }
 
-    @RequestMapping("/waiting")
+    @PostMapping("/waiting")
     @Override
-    public void waitingQueue(@RequestBody long userId, String token){
-
-
+    public ResponseEntity<ResponseQueue> waitingQueue(@RequestBody RequestToken requestToken){
+        WaitingQueueDetail waitingQueueDetail = waitingQueueFacade.getWaitingQueue(requestToken.token());
+        ResponseQueue result = ResponseQueue.from(waitingQueueDetail);
+        return ResponseEntity.ok(result);
     }
-
 
 }
