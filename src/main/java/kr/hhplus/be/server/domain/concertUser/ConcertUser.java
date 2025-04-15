@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.user;
+package kr.hhplus.be.server.domain.concertUser;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,17 +12,17 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseTimeEntity {
+public class ConcertUser extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String userName;
 
-    private User(String userName){
+    private ConcertUser(String userName){
         this.userName = userName;
     }
 
-    public static User create(String userName){
-        return new User(userName);
+    public static ConcertUser create(String userName){
+        return new ConcertUser(userName);
     }
 }

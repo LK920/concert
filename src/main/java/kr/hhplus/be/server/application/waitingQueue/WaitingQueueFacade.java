@@ -1,11 +1,8 @@
 package kr.hhplus.be.server.application.waitingQueue;
 
-import kr.hhplus.be.server.domain.queue.WaitingQueue;
 import kr.hhplus.be.server.domain.queue.WaitingQueueDetail;
 import kr.hhplus.be.server.domain.queue.WaitingQueueInfo;
 import kr.hhplus.be.server.domain.queue.WaitingQueueService;
-import kr.hhplus.be.server.domain.user.User;
-import kr.hhplus.be.server.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

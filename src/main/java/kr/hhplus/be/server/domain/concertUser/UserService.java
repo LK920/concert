@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.user;
+package kr.hhplus.be.server.domain.concertUser;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User getUser(long userId){
+    public ConcertUser getUser(long userId){
         return userRepository.findById(userId);
     }
 
