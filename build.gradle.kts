@@ -12,6 +12,7 @@ fun getGitHash(): String {
 
 group = "kr.hhplus.be"
 version = getGitHash()
+val queryDslVersion = "5.0.0"
 
 java {
 	toolchain {
@@ -53,11 +54,37 @@ dependencies {
 	compileOnly("org.projectlombok:lombok:1.18.38")
 	annotationProcessor("org.projectlombok:lombok:1.18.38")
 
-
-
+	// querydsl 추가
+	// QueryDSL Implementation
+	implementation ("com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta")
+	annotationProcessor("com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
+	annotationProcessor("jakarta.annotation:jakarta.annotation-api")
+	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
 	systemProperty("user.timezone", "UTC")
+}
+
+/**
+ * QueryDSL Build Options
+ */
+val querydslDir = "src/main/generated"
+
+sourceSets {
+	getByName("main").java.srcDirs(querydslDir)
+}
+
+tasks.withType<JavaCompile> {
+	options.generatedSourceOutputDirectory = file(querydslDir)
+
+	// 위의 설정이 안되면 아래 설정 사용
+	// options.generatedSourceOutputDirectory.set(file(querydslDir))
+}
+
+tasks.named("clean") {
+	doLast {
+		file(querydslDir).deleteRecursively()
+	}
 }
