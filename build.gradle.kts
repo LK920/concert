@@ -77,10 +77,10 @@ sourceSets {
 }
 
 tasks.withType<JavaCompile> {
-	options.generatedSourceOutputDirectory = file(querydslDir)
+//	options.generatedSourceOutputDirectory = file(querydslDir)
 
 	// 위의 설정이 안되면 아래 설정 사용
-	// options.generatedSourceOutputDirectory.set(file(querydslDir))
+	 options.generatedSourceOutputDirectory.set(file(querydslDir))
 }
 
 tasks.named("clean") {
