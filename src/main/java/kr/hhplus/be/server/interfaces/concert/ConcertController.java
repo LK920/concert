@@ -66,6 +66,4 @@ public class ConcertController implements ConcertApi{
                 ).toList();
         return ResponseEntity.ok(result);
     }
-
-
 }
