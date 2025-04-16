@@ -15,8 +15,8 @@ public class PaymentService {
     @Transactional
     public PaymentInfo createPayment(long userId, long amount, PaymentType paymentType){
         Payment payment = Payment.create(userId, amount,paymentType);
-        paymentRepository.save(payment);
-        return PaymentInfo.from(payment);
+        Payment saved = paymentRepository.save(payment);
+        return PaymentInfo.from(saved);
     }
     // 결제 내역 조회
     @Transactional(readOnly = true)
