@@ -32,4 +32,21 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
                 .fetch();
 
     }
+
+    @Override
+    public List<Reservation> getReservationBySeatId(long seatId) {
+        QReservation reservation = QReservation.reservation;
+        return queryFactory.selectFrom(reservation)
+                .where(reservation.concertSeatId.eq(seatId))
+                .fetch();
+    }
+
+    @Override
+    public boolean existsReservationBySeatId(long seatId){
+        QReservation reservation = QReservation.reservation;
+        Reservation result = queryFactory.selectFrom(reservation)
+                .where(reservation.concertSeatId.eq(seatId))
+                .fetchFirst();
+        return result != null;
+    }
 }
