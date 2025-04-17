@@ -22,8 +22,8 @@ public class PointService {
         // 포인트 데이터
         Point point = pointRepository.findByUserId(userId).orElseThrow(()->new EntityNotFoundException("해당 유저가 없습니다."));
         point.chargePoint(amount);
-        pointRepository.save(point);
-        return PointInfo.from(point);
+        Point saved = pointRepository.save(point);
+        return PointInfo.from(saved);
     }
 
     @Transactional

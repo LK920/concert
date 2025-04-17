@@ -11,6 +11,11 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {
+        @Index(name = "idx_waiting_queue_user_id", columnList = "user_id"),
+        @Index(name = "idx_waiting_queue_token", columnList = "token"),
+        @Index(name = "idx_waiting_queue_status", columnList = "status")
+})
 public class WaitingQueue extends BaseTimeEntity {
     private static final long EXPIRED_TIME = 10;
 
@@ -19,33 +24,46 @@ public class WaitingQueue extends BaseTimeEntity {
     private long id;
     private long userId;
     private String token;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private WaitingQueueStatus status;
     private LocalDateTime expiredAt;
 
-    private WaitingQueue(String token, long userId, LocalDateTime now){
+    private WaitingQueue(String token, long userId){
         this.token = token;
         this.userId = userId;
         this.status = WaitingQueueStatus.WAITING;
-        this.expiredAt = now.plusMinutes(EXPIRED_TIME);
+        this.expiredAt = null;
     }
 
-    public static WaitingQueue create(String token, long userId, LocalDateTime now){
-        return new WaitingQueue(token, userId,now);
+    public static WaitingQueue create(String token, long userId){
+        return new WaitingQueue(token, userId);
     }
 
     public boolean isExpired(LocalDateTime now){
-        return this.expiredAt.isBefore(now);
+        return this.expiredAt != null
+                && this.status == WaitingQueueStatus.ACTIVE
+                && this.expiredAt.isBefore(now);
     }
 
-    public void activate(){
-        if(this.status != WaitingQueueStatus.WAITING){throw new IllegalArgumentException("대기 상태가 아닙니다.");}
+    public boolean isActivated(long currentActiveCount, long maxCapacity){
+        if(this.status != WaitingQueueStatus.WAITING){return false;}
+        if (currentActiveCount >= maxCapacity) {return false;}
+        return true;
+    }
+
+    public void active(){
         this.status = WaitingQueueStatus.ACTIVE;
+        this.expiredAt = LocalDateTime.now().plusMinutes(EXPIRED_TIME);
+    }
+
+    public void active(LocalDateTime now){
+        this.status = WaitingQueueStatus.ACTIVE;
+        this.expiredAt = now.plusMinutes(EXPIRED_TIME);
     }
 
     public void expire(){
-        if(this.status == WaitingQueueStatus.EXPIRED){throw new IllegalArgumentException("이미 만료된 상태입니다.");}
         this.status = WaitingQueueStatus.EXPIRED;
+        this.expiredAt = null;
     }
 
 }

@@ -1,9 +1,6 @@
 package kr.hhplus.be.server.domain.point;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = @Index(name = "idx_point_user_id", columnList = "user_id"))
 public class Point extends BaseTimeEntity {
 
     private static final long MAX_POINT = 1000000L;
