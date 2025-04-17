@@ -9,6 +9,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {
+    @Index(name = "idx_reservation_concert_seat_id", columnList = "concert_seat_id"),
+    @Index(name = "idx_reservation_user_id", columnList = "user_id"),
+    @Index(name = "idx_reservation_payment_id", columnList = "payment_id"),
+    }
+)
 public class Reservation extends BaseTimeEntity {
 
     @Id

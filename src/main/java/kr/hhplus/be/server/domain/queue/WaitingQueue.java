@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = @Index(name = "idx_waiting_queue_user_id", columnList = "user_id"))
 public class WaitingQueue extends BaseTimeEntity {
     private static final long EXPIRED_TIME = 10;
 
