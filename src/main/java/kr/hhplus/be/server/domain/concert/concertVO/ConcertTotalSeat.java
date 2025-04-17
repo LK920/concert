@@ -1,9 +1,11 @@
 package kr.hhplus.be.server.domain.concert.concertVO;
 
-import lombok.Data;
-import lombok.Value;
+import jakarta.persistence.Embeddable;
+import lombok.*;
 
-@Value
+@Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class ConcertTotalSeat {
     long concertTotalSeat;
 

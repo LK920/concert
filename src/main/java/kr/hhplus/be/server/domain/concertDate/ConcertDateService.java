@@ -12,9 +12,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ConcertDateService {
-    private ConcertDate concertDate;
 
-    private ConcertDateRepository concertDateRepository;
+    private final ConcertDateRepository concertDateRepository;
 
     @Transactional(readOnly = true)
     public List<ConcertDateInfo> getConcertAvailableDates(long concertId) {

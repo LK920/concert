@@ -1,9 +1,10 @@
 package kr.hhplus.be.server.domain.seat;
 
+import kr.hhplus.be.server.infra.seat.SeatRepositoryCustom;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
 
-public interface SeatRepository {
-    List<Seat> findByConcertDateIdAndSeatStatus(long concertDateId, SeatStatus seatStatus);
-    Seat findBySeatId(long seatId);
-    void save(Seat seat);
+public interface SeatRepository extends JpaRepository<Seat, Long>, SeatRepositoryCustom {
+
 }

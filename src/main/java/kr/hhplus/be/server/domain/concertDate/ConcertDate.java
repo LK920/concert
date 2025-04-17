@@ -1,9 +1,6 @@
 package kr.hhplus.be.server.domain.concertDate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = @Index(name = "idx_concert_date_concert_id", columnList = "concert_id"))
 public class ConcertDate extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
