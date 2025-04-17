@@ -28,7 +28,7 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
         QReservation reservation = QReservation.reservation;
         return queryFactory.selectFrom(reservation)
                 .where(reservation.userId.eq(userId))
-                .orderBy(reservation.createdAt.desc())
+                .orderBy(reservation.id.desc()) // 최신순
                 .fetch();
 
     }

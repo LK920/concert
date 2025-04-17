@@ -33,10 +33,11 @@ public class WaitingQueueRepositoryImpl implements WaitingQueueRepositoryCustom 
     public long countByStatus(WaitingQueueStatus waitingQueueStatus) {
         QWaitingQueue waitingQueue = QWaitingQueue.waitingQueue;
         return queryFactory
-                .selectFrom(waitingQueue)
+                .select(waitingQueue.count())
+                .from(waitingQueue)
                 .where(
                         waitingQueue.status.eq(waitingQueueStatus)
-                ).stream().count();
+                ).fetchOne();
     }
 
     @Override
@@ -63,7 +64,7 @@ public class WaitingQueueRepositoryImpl implements WaitingQueueRepositoryCustom 
         QWaitingQueue waitingQueue = QWaitingQueue.waitingQueue;
         WaitingQueue result = queryFactory.selectFrom(waitingQueue)
                 .where(waitingQueue.status.eq(WaitingQueueStatus.ACTIVE))
-                .orderBy(waitingQueue.createdAt.asc())
+                .orderBy(waitingQueue.id.asc())
                 .limit(1)
                 .fetchOne();
         return Optional.of(result);
@@ -82,7 +83,7 @@ public class WaitingQueueRepositoryImpl implements WaitingQueueRepositoryCustom 
         QWaitingQueue waitingQueue = QWaitingQueue.waitingQueue;
         return queryFactory.selectFrom(waitingQueue)
                 .where(waitingQueue.status.eq(WaitingQueueStatus.WAITING))
-                .orderBy(waitingQueue.createdAt.asc())
+                .orderBy(waitingQueue.id.asc())
                 .limit(availableSlots)
                 .fetch();
     }
