@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 /*
-* EnableScheduling => Schedulerd 어노테이션 사용하기위한 설정
+* EnableScheduling => Scheduled 어노테이션 사용하기위한 설정
 * */
 @EnableScheduling
 @SpringBootApplication

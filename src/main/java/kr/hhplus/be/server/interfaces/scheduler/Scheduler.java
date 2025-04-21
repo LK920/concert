@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.application.scheduler;
+package kr.hhplus.be.server.interfaces.scheduler;
 
 import kr.hhplus.be.server.domain.queue.WaitingQueueService;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,7 @@ public class Scheduler {
 
     private final WaitingQueueService waitingQueueService;
 
-    @Transactional
-    @Scheduled(fixedRate = 60000) // 1분마다 실행
+    @Scheduled(fixedRateString = "${scheduler.fix-rate-ms}")
     public void runScheduler(){
         waitingQueueService.refreshWaitingQueueStatus(LocalDateTime.now());
     }

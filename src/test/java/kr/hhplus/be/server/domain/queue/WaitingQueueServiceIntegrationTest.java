@@ -157,6 +157,5 @@ class WaitingQueueServiceIntegrationTest {
         assertThat(result).filteredOn(q -> q.getUserId() == 4l)
                 .extracting("status")
                 .containsExactly(WaitingQueueStatus.WAITING);
-
     }
 }
