@@ -6,13 +6,16 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.naming.InsufficientResourcesException;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(indexes = @Index(name = "idx_waiting_queue_user_id", columnList = "user_id"))
+@Table(indexes = {
+        @Index(name = "idx_waiting_queue_user_id", columnList = "user_id"),
+        @Index(name = "idx_waiting_queue_token", columnList = "token"),
+        @Index(name = "idx_waiting_queue_status", columnList = "status")
+})
 public class WaitingQueue extends BaseTimeEntity {
     private static final long EXPIRED_TIME = 10;
 
@@ -21,7 +24,7 @@ public class WaitingQueue extends BaseTimeEntity {
     private long id;
     private long userId;
     private String token;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private WaitingQueueStatus status;
     private LocalDateTime expiredAt;
 

@@ -5,5 +5,5 @@ import kr.hhplus.be.server.domain.concertDate.ConcertDate;
 import java.util.List;
 
 public interface ConcertDateRepositoryCustom {
-    List<ConcertDate> findAllByConcertIdAndIsAvailableTrue(long concertId);
+    List<ConcertDate> findAllByConcertId(long concertId);
 }

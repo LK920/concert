@@ -7,4 +7,6 @@ import java.util.List;
 public interface ReservationRepositoryCustom {
     Reservation findByReservationId(long reservationId);
     List<Reservation> getUserReservationList(long userId);
+    List<Reservation> getReservationBySeatId(long seatId);
+    boolean existsReservationBySeatId(long seatId);
 }

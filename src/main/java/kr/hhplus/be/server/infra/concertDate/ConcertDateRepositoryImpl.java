@@ -15,13 +15,10 @@ public class ConcertDateRepositoryImpl implements ConcertDateRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ConcertDate> findAllByConcertIdAndIsAvailableTrue(long concertId) {
+    public List<ConcertDate> findAllByConcertId(long concertId) {
         QConcertDate concertDate = QConcertDate.concertDate1;
         return queryFactory.selectFrom(concertDate)
-                .where(
-                        concertDate.concertId.eq(concertId),
-                        concertDate.isAvailable.isTrue()
-                )
+                .where(concertDate.concertId.eq(concertId))
                 .fetch();
     }
 }

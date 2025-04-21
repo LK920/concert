@@ -19,9 +19,7 @@ public class PaymentRepositoryImpl implements PaymentRepositoryCustom {
     public List<Payment> findByUserId(long userId) {
         QPayment payment = QPayment.payment;
         List<Payment> result = queryFactory.selectFrom(payment)
-                .where(
-                        payment.userId.eq(userId)
-                )
+                .where(payment.userId.eq(userId))
                 .fetch();
         return result;
     }

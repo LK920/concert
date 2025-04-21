@@ -28,8 +28,25 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
         QReservation reservation = QReservation.reservation;
         return queryFactory.selectFrom(reservation)
                 .where(reservation.userId.eq(userId))
-                .orderBy(reservation.createdAt.desc())
+                .orderBy(reservation.id.desc()) // 최신순
                 .fetch();
 
+    }
+
+    @Override
+    public List<Reservation> getReservationBySeatId(long seatId) {
+        QReservation reservation = QReservation.reservation;
+        return queryFactory.selectFrom(reservation)
+                .where(reservation.concertSeatId.eq(seatId))
+                .fetch();
+    }
+
+    @Override
+    public boolean existsReservationBySeatId(long seatId){
+        QReservation reservation = QReservation.reservation;
+        Reservation result = queryFactory.selectFrom(reservation)
+                .where(reservation.concertSeatId.eq(seatId))
+                .fetchFirst();
+        return result != null;
     }
 }
