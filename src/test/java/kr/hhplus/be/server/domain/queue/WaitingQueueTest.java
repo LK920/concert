@@ -18,38 +18,41 @@ class WaitingQueueTest {
         LocalDateTime datetime = LocalDateTime.of(2025,05,05,20,00,00);
         long expiredAt = 10;
         // when
-        WaitingQueue queue = WaitingQueue.create(token,userId,datetime);
+        WaitingQueue queue = WaitingQueue.create(token,userId);
         // then
         assertThat(queue.getUserId()).isEqualTo(userId);
         assertThat(queue.getToken()).isEqualTo(token);
         assertThat(queue.getStatus()).isEqualTo(WaitingQueueStatus.WAITING);
-        assertThat(queue.getExpiredAt()).isEqualTo(datetime.plusMinutes(expiredAt));
+        assertThat(queue.getExpiredAt()).isNull();
     }
 
     @Test
-    void activate() {
+    void isActivated() {
         // given
         String token = "token-uuid";
         long userId = 1l;
-        LocalDateTime datetime = LocalDateTime.now();
-        WaitingQueue queue = WaitingQueue.create(token,userId,datetime);
-        queue.activate();
+        long activeQueueCount = 3;
+        long maxCapacity = 3;
+        WaitingQueue queue = WaitingQueue.create(token,userId);
+        queue.active();
 
         //when & then
-        assertThatThrownBy(()->queue.activate()).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("대기 상태가 아닙니다.");
+        boolean queueStatus = queue.isActivated(activeQueueCount, maxCapacity);
+
+        assertThat(queueStatus).isFalse();
     }
 
     @Test
-    void expire() {
+    void isExpired() {
         String token = "token-uuid";
         long userId = 1l;
         LocalDateTime datetime = LocalDateTime.now();
-        WaitingQueue queue = WaitingQueue.create(token,userId,datetime);
+        WaitingQueue queue = WaitingQueue.create(token,userId);
         queue.expire();
 
         //when & then
-        assertThatThrownBy(()->queue.expire()).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 만료된 상태입니다.");
+        boolean queueStatus = queue.isExpired(datetime);
+
+        assertThat(queueStatus).isFalse();
     }
 }

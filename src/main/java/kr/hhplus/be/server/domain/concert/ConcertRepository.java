@@ -1,7 +1,10 @@
 package kr.hhplus.be.server.domain.concert;
 
-import java.util.List;
+import kr.hhplus.be.server.infra.concert.ConcertRepositoryCustom;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ConcertRepository{
-    List<Concert> findAll();
+public interface ConcertRepository extends JpaRepository<Concert, Long>, ConcertRepositoryCustom {
+    /*
+    * Jpa, querydsl 메서드 사용 가능
+    * */
 }

@@ -1,9 +1,10 @@
 package kr.hhplus.be.server.domain.reservation;
 
+import kr.hhplus.be.server.infra.reservation.ReservationRepositoryCustom;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
 
-public interface ReservationRepository {
-    void save(Reservation reservation);
-    Reservation findByReservationId(long reservationId);
-    List<Reservation> findAllByUserId(long userId);
+public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationRepositoryCustom {
+
 }

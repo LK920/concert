@@ -11,6 +11,9 @@ import kr.hhplus.be.server.interfaces.concert.response.ConcertDateResponseDTO;
 import kr.hhplus.be.server.interfaces.concert.response.ConcertSeatResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,16 +38,13 @@ public class ConcertController implements ConcertApi{
 
     @GetMapping("/list")
     @Override
-    public ResponseEntity<List<ConcertResponseDTO>> getConcerts(){
-        List<ConcertInfo> concerts = concertService.getConcerts();
-        List<ConcertResponseDTO> data = concerts.stream()
-                .map(concertInfo -> new ConcertResponseDTO(
-                        concertInfo.concertId(),
-                        concertInfo.concertName(),
-                        concertInfo.concertTotalSeat()
-                ))
-                .toList();
-        return ResponseEntity.ok(data);
+    public ResponseEntity<Page<ConcertResponseDTO>> getConcerts(
+            @PageableDefault Pageable pageable){
+        Page<ConcertInfo> concerts = concertService.getConcerts(pageable);
+        Page<ConcertResponseDTO> result = concerts
+                .map(concertInfo -> ConcertResponseDTO.from(concertInfo)
+                );
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{concertId}/date")
