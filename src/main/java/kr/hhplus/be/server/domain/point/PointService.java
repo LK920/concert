@@ -1,7 +1,9 @@
 package kr.hhplus.be.server.domain.point;
 
 import jakarta.persistence.EntityNotFoundException;
+import kr.hhplus.be.server.common.enums.LockType;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +18,10 @@ public class PointService {
         Point point = pointRepository.findByUserId(userId).orElseThrow(()->new EntityNotFoundException("해당 유저가 없습니다."));
         return PointInfo.from(point);
     }
-
     @Transactional
     public PointInfo chargeUserPoint(long userId, long amount){
         // 포인트 데이터
-        Point point = pointRepository.findByUserId(userId).orElseThrow(()->new EntityNotFoundException("해당 유저가 없습니다."));
+        Point point = findUserPointWithLock(userId, LockType.OPTIMISTIC);
         point.chargePoint(amount);
         Point saved = pointRepository.save(point);
         return PointInfo.from(saved);
@@ -32,6 +33,19 @@ public class PointService {
         Point point = pointRepository.findByUserId(userId).orElseThrow(()->new EntityNotFoundException("해당 유저가 없습니다."));
         point.usePoint(amount);
         pointRepository.save(point);
+    }
+
+    private Point findUserPointWithLock(long userId, LockType lockType){
+        switch (lockType){
+            case OPTIMISTIC -> {
+                return pointRepository.findByUserId(userId).orElseThrow(()->new EntityNotFoundException("해당 유저가 없습니다."));
+            }
+            case PESSIMISTIC -> {
+                return pointRepository.findByUserIdForUpdate(userId).orElseThrow(()->new EntityNotFoundException("해당 유저가 없습니다."));
+            }
+            default -> throw new IllegalIdentifierException("유효하지 않은 lock입니다.");
+        }
+
     }
 
 }
