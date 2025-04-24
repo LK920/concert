@@ -37,10 +37,10 @@ public class WaitingQueueService {
                 ()-> new IllegalArgumentException("존재하지 않는 토큰입니다."));
 
         // 현재 ACTIVE 상태 사용자 수 확인
-        long activeUserCount = waitingQueueRepository.countByStatus(WaitingQueueStatus.ACTIVE);
+        List<WaitingQueue> activeWaitingQueues = waitingQueueRepository.getWaitingQueueStatus(WaitingQueueStatus.ACTIVE);
 
         // 참가 가능한 유저 수 체크
-        if (waitingQueue.isActivated(activeUserCount, MAX_ACTIVE_USERS)) {
+        if (waitingQueue.isActivated(activeWaitingQueues.size(), MAX_ACTIVE_USERS)) {
             waitingQueue.active();
             waitingQueueRepository.save(waitingQueue);
             return WaitingQueueDetail.from(waitingQueue,0, 0);

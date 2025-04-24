@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface WaitingQueueRepositoryCustom {
     Optional<WaitingQueue> findByToken(String token);
-    long countByStatus(WaitingQueueStatus waitingQueueStatus);
+    List<WaitingQueue> getWaitingQueueStatus(WaitingQueueStatus waitingQueueStatus) ;
     long findWaitingNumber(String token);
     Optional<WaitingQueue> findOldestActiveWaiting();
     List<WaitingQueue> findByStatus(WaitingQueueStatus waitingQueueStatus);
