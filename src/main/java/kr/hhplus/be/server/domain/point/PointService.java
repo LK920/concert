@@ -21,7 +21,7 @@ public class PointService {
     @Transactional
     public PointInfo chargeUserPoint(long userId, long amount){
         // 포인트 데이터
-        Point point = findUserPointWithLock(userId, LockType.PESSIMISTIC);
+        Point point = findUserPointWithLock(userId, LockType.OPTIMISTIC);
         point.chargePoint(amount);
         Point saved = pointRepository.save(point);
         return PointInfo.from(saved);
