@@ -10,6 +10,6 @@ public record ResponseQueue(
 ) {
 
     public static ResponseQueue from(WaitingQueueDetail waitingQueueDetail){
-        return  new ResponseQueue(waitingQueueDetail.token(), waitingQueueDetail.remainedMillis(), waitingQueueDetail.token(), waitingQueueDetail.waitingNumber());
+        return  new ResponseQueue(waitingQueueDetail.token(), waitingQueueDetail.remainedMillis(), waitingQueueDetail.status().toString(), waitingQueueDetail.waitingNumber());
     }
 }
