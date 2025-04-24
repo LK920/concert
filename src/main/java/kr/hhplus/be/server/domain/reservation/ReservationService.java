@@ -1,12 +1,14 @@
 package kr.hhplus.be.server.domain.reservation;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
@@ -15,16 +17,19 @@ public class ReservationService {
 
     // 예약 생성
     @Transactional
-    public ReservationInfo createReservation(long seatId, long userId){
-        boolean exist = reservationRepository.existsReservationBySeatId(seatId);
-        if(exist){
+    public ReservationInfo createReservation(long userId, long seatId){
+        try{
+            // 예약 내역 저장만 한다
+            Reservation reservation = Reservation.create(seatId,userId);
+
+            Reservation saved = reservationRepository.save(reservation);
+
+            return ReservationInfo.from(saved);
+
+        } catch (DataIntegrityViolationException e) {
+            log.warn("이미 예약된 좌석입니다.");
             throw new IllegalArgumentException("이미 예약된 좌석입니다.");
         }
-        // 예약 내역 저장만 한다
-        Reservation reservation = Reservation.create(seatId,userId);
-        Reservation saved = reservationRepository.save(reservation);
-
-        return ReservationInfo.from(saved);
     }
 
     // 예약 취소

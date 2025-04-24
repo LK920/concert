@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
     @Index(name = "idx_reservation_concert_seat_id", columnList = "concert_seat_id"),
     @Index(name = "idx_reservation_user_id", columnList = "user_id"),
     @Index(name = "idx_reservation_payment_id", columnList = "payment_id"),
+    },
+    uniqueConstraints = {
+        @UniqueConstraint(name = "uk_reservation_concert_seat_id", columnNames = "concert_seat_id")
     }
 )
 public class Reservation extends BaseTimeEntity {

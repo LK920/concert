@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.application.reservation;
 
+import jakarta.persistence.PessimisticLockException;
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.payment.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.PaymentService;
@@ -23,15 +24,22 @@ public class ReservationFacade {
     private final SeatService seatService;
 
     public ReservationInfo reserveConcert(ReserveConcertCommand reserveConcertCommand){
-        // 좌석 상태 변경(사용 가능 -> 불가능)
-        seatService.reserveSeat(reserveConcertCommand.seatId());
-        // 예약 내역 등록
-        ReservationInfo reservationInfo = reservationService.createReservation(reserveConcertCommand.userId(), reserveConcertCommand.seatId());
-        try{
+        try {
+            // 좌석 상태 변경(사용 가능 -> 불가능)
+            seatService.reserveSeat(reserveConcertCommand.seatId());
+            // 예약 내역 등록
+            ReservationInfo reservationInfo = reservationService.createReservation(reserveConcertCommand.userId(), reserveConcertCommand.seatId());
+
             return processReservationTransaction(reserveConcertCommand, reservationInfo);
+
+        }catch (IllegalArgumentException illegalArgumentException){
+            // 좌석 중복 예외
+            log.error(illegalArgumentException.getMessage());
+            throw new IllegalArgumentException(illegalArgumentException.getMessage(), illegalArgumentException);
+            
         }catch (Exception e){
-            log.warn("예약 처리 중 에러 발생, 예약 대기 내역 ID : {} ", reservationInfo.reservationId());
-            return reservationInfo;
+            log.error("예외 메시지: {}", e.getMessage(), e);
+            throw new RuntimeException("예외 발생", e);
         }
     }
 
@@ -39,7 +47,7 @@ public class ReservationFacade {
     public ReservationInfo processReservationTransaction(ReserveConcertCommand reserveConcertCommand, ReservationInfo reservationInfo){
         // 유저 포인트 차감
         pointService.useUserPoint(reserveConcertCommand.userId(),reserveConcertCommand.seatPrice());
-                // 결제 추가
+        // 결제 추가
         PaymentInfo paymentInfo = paymentService.createPayment(reservationInfo.userId(), reserveConcertCommand.seatPrice(), PaymentType.USE);
         // 예약 내역에 결제 아이디 추가
         return reservationService.updatePaymentInfo(reservationInfo.reservationId(), paymentInfo.paymentId());

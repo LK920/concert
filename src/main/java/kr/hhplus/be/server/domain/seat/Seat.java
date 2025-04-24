@@ -22,6 +22,8 @@ public class Seat extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private SeatStatus seatStatus;
     private long concertSeatPrice;
+    @Version
+    private long version;
 
     private Seat(long concertDateId, long concertSeatNumber, long concertSeatPrice){
         if(concertSeatPrice <= 0){
