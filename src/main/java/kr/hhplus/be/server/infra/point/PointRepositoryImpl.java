@@ -20,6 +20,7 @@ public class PointRepositoryImpl implements PointRepositoryCustom {
     public Optional<Point> findByUserId(long userId) {
         QPoint point = QPoint.point1;
         Point result = queryFactory.selectFrom(point)
+                .setLockMode(LockModeType.OPTIMISTIC)
                 .where(point.userId.eq(userId))
                 .fetchOne();
         return Optional.ofNullable(result);

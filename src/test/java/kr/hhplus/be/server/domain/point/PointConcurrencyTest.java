@@ -15,6 +15,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -90,6 +91,8 @@ public class PointConcurrencyTest {
         long initPoint = 10000l;
         long usePoint = 100l;
         int threadCnt = 10;
+        AtomicLong success = new AtomicLong(0);
+        AtomicLong fail = new AtomicLong(0);
         Point userPoint = Point.create(userId,initPoint);
         pointRepository.save(userPoint);
 
@@ -102,8 +105,10 @@ public class PointConcurrencyTest {
                 try {
                     startLatch.await();
                     pointService.useUserPoint(userId, usePoint);
+                    success.getAndIncrement();
                 } catch (Exception e) {
                     log.error(e.getMessage());
+                    fail.getAndIncrement();
                 } finally {
                     endLatch.countDown();
                 }
@@ -115,7 +120,7 @@ public class PointConcurrencyTest {
         executorService.shutdown();
 
         PointInfo pointInfo = pointService.getUserPoint(userId);
-        long totalUsePoint = usePoint * threadCnt;
+        long totalUsePoint = usePoint * success.get();
         assertThat(pointInfo.userPoint()).isEqualTo(initPoint - totalUsePoint);
     }
 }

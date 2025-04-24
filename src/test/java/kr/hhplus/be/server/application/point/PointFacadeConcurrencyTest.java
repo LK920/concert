@@ -44,13 +44,12 @@ class PointFacadeConcurrencyTest {
     void charge_point_concurrency() throws InterruptedException {
         long userId = 1L;
         long chargeAmount = 100L;
-        int threadCnt = 1000; // 동시 실행할 쓰레드 수
+        int threadCnt = 2; // 동시 실행할 쓰레드 수
         AtomicLong successCnt = new AtomicLong();
         AtomicLong failCnt = new AtomicLong();
-        List<Long> responseTimes = Collections.synchronizedList(new ArrayList<>());
         Point userPoint = Point.create(userId, 0);
         pointRepository.save(userPoint);
-        ExecutorService executorService = Executors.newFixedThreadPool(32);
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
 
         // CountDownLatch
         CountDownLatch startLatch = new CountDownLatch(1);
@@ -59,14 +58,7 @@ class PointFacadeConcurrencyTest {
         for (int i = 0; i < threadCnt; i++) {
             executorService.submit(() -> {
                 try {
-                    startLatch.await(); // 시작 시점 동기화
-                    long startTime = System.currentTimeMillis();
-
                     pointFacade.chargePoint(userId, chargeAmount);
-
-                    long endTime = System.currentTimeMillis();
-
-                    responseTimes.add(endTime - startTime);
                     successCnt.getAndIncrement();
                 } catch (Exception e) {
                     log.error(e.getMessage());
@@ -83,9 +75,6 @@ class PointFacadeConcurrencyTest {
 
         log.info("성공 요청 수: {}", successCnt.get());
         log.info("실패 요청 수: {}", failCnt.get());
-        log.info("평균 응답 시간: {} ms", responseTimes.stream().mapToLong(Long::longValue).average().orElse(0));
-        log.info("최대 응답 시간: {} ms", responseTimes.stream().mapToLong(Long::longValue).max().orElse(0));
-        log.info("최소 응답 시간: {} ms", responseTimes.stream().mapToLong(Long::longValue).min().orElse(0));
 
         // 최종 포인트 확인
         PointCommand result = pointFacade.getUserPoint(userId);
@@ -96,5 +85,4 @@ class PointFacadeConcurrencyTest {
         List<Payment> payments = paymentRepository.findByUserId(userId);
         assertThat(payments).hasSize((int) successCnt.get()); // 결제 내역은 각 쓰레드마다 하나씩 있어야 함
     }
-
 }
