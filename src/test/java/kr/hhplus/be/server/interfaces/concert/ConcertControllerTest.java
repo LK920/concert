@@ -12,12 +12,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.MockitoAnnotations;
-import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -57,20 +54,17 @@ class ConcertControllerTest {
         ConcertInfo concertInfo1 = new ConcertInfo(1l, "concert1",50L);
         ConcertInfo concertInfo2 = new ConcertInfo(2l, "concert2",50L);
         List<ConcertInfo> concertList = List.of(concertInfo1, concertInfo2);
-        PageRequest pageable = PageRequest.of(0,10);
-        when(concertService.getConcerts(pageable)).thenReturn(new PageImpl<>(concertList, pageable, concertList.size()));
+        when(concertService.getConcerts()).thenReturn(concertList);
 
         // when
-        mvc.perform(get("/concert/list")
-                        .param("page", "0")
-                        .param("size", "10"))
+        mvc.perform(get("/concert/list"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].concertId").value(1L))
-                .andExpect(jsonPath("$.content[0].concertName").value("concert1"))
-                .andExpect(jsonPath("$.content[1].concertId").value(2L))
-                .andExpect(jsonPath("$.content[1].concertName").value("concert2"));
+                .andExpect(jsonPath("$[0].concertId").value(1L))
+                .andExpect(jsonPath("$[0].concertName").value("concert1"))
+                .andExpect(jsonPath("$[1].concertId").value(2L))
+                .andExpect(jsonPath("$[1].concertName").value("concert2"));
         // then
-        verify(concertService, times(1)).getConcerts(pageable);
+        verify(concertService, times(1)).getConcerts();
     }
 
     @DisplayName("콘서트 날짜 조회")

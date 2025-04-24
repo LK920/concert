@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.utility.TestcontainersConfiguration;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,28 +39,24 @@ public class ConcertServiceIntegrationTest {
     @Test
     @DisplayName("콘서트_조회_성공")
     void getConcerts_success() {
-        PageRequest pageRequest = PageRequest.of(0, 5);
+
         IntStream.rangeClosed(1, 20).forEach(i -> {
             Concert concert = Concert.create("Concert " + i, 100 + i);
             concertRepository.save(concert);
         });
 
-        Page<ConcertInfo> result = concertService.getConcerts(pageRequest);
+        List<ConcertInfo> result = concertService.getConcerts();
 
-        assertThat(result.getTotalElements()).isEqualTo(20);
-        assertThat(result.getContent()).hasSize(5);
-        assertThat(result.getContent().get(0).concertName()).contains("Concert");
+        assertThat(result).hasSize(5);
+        assertThat(result.get(0).concertName()).contains("Concert");
     }
 
     @Test
     @DisplayName("콘서트_조회_빈값")
     void getConcerts_empty() {
-        PageRequest pageRequest = PageRequest.of(0, 5);
+        List<ConcertInfo> result = concertService.getConcerts();
 
-        Page<ConcertInfo> result = concertService.getConcerts(pageRequest);
-
-        assertThat(result.getTotalElements()).isEqualTo(0);
-        assertThat(result.getContent()).hasSize(0);
+        assertThat(result).isEmpty();
     }
 
 }

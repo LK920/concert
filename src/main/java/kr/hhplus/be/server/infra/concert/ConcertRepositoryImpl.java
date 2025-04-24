@@ -19,19 +19,13 @@ public class ConcertRepositoryImpl implements ConcertRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Concert> findAllConcerts(Pageable pageable) {
+    public List<Concert> findAllConcerts() {
         QConcert concert = QConcert.concert;
-        List<Concert> content = queryFactory
+        List<Concert> result = queryFactory
                 .selectFrom(concert)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
                 .orderBy(concert.id.desc())
                 .fetch();
-        Long total = queryFactory
-                .select(concert.count())
-                .from(concert)
-                .fetchOne();
-        return new PageImpl<>(content,pageable,total);
+        return result;
     }
 
 }

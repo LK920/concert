@@ -16,11 +16,9 @@ public class ConcertService {
 
     private final ConcertRepository concertRepository;
 
-    public Page<ConcertInfo> getConcerts(Pageable pageable){
-        Page<Concert> concertList = concertRepository.findAllConcerts(pageable);
+    public List<ConcertInfo> getConcerts(){
+        List<Concert> concertList = concertRepository.findAllConcerts();
 
-        return concertList.map(
-                concert->ConcertInfo.from(concert)
-        );
+        return concertList.stream().map(concert -> ConcertInfo.from(concert)).toList();
     }
 }
