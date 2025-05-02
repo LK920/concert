@@ -25,7 +25,7 @@ public class PointFacade {
 
     public PointCommand chargePoint(long userId, long amount){
         String lockKey = "lock:point:" + userId;
-        String lockValue = UUID.randomUUID().toString().substring(0,8);
+        String lockValue = "lock:point:" + UUID.randomUUID().toString();
 //      심플 락 획득 -> 포인트 충전은 1번만 실행되면 된다.
         boolean getLock = redisSimpleLock.tryLock(lockKey, lockValue, 3000);
         if(getLock){
