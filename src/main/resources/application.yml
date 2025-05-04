@@ -36,3 +36,5 @@ spring:
 ---
 scheduler:
   fix-rate-ms: 60000
+redis:
+  expire-time-ms: 3000
