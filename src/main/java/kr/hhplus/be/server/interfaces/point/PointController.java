@@ -17,7 +17,7 @@ public class PointController implements PointApi {
 
     @GetMapping("/{userId}")
     @Override
-    public ResponseEntity<PointResponseDTO> getUserPoint(@PathVariable long userId){
+    public ResponseEntity<PointResponseDTO> getUserPoint(@PathVariable("userId") long userId){
         PointCommand pointCommand = pointFacade.getUserPoint(userId);
         PointResponseDTO response = new PointResponseDTO(pointCommand.userId(), pointCommand.userPoint());
         return ResponseEntity.ok(response);

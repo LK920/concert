@@ -38,18 +38,17 @@ public class ConcertController implements ConcertApi{
 
     @GetMapping("/list")
     @Override
-    public ResponseEntity<Page<ConcertResponseDTO>> getConcerts(
-            @PageableDefault Pageable pageable){
-        Page<ConcertInfo> concerts = concertService.getConcerts(pageable);
-        Page<ConcertResponseDTO> result = concerts
+    public ResponseEntity<List<ConcertResponseDTO>> getConcerts(){
+        List<ConcertInfo> concerts = concertService.getConcerts();
+        List<ConcertResponseDTO> result = concerts.stream()
                 .map(concertInfo -> ConcertResponseDTO.from(concertInfo)
-                );
+                ).toList();
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{concertId}/date")
     @Override
-    public ResponseEntity<List<ConcertDateResponseDTO>> getConcertAvailableDates(@PathVariable long concertId){
+    public ResponseEntity<List<ConcertDateResponseDTO>> getConcertAvailableDates(@PathVariable("concertId") long concertId){
         List<ConcertDateInfo> concertDateInfos = concertDateService.getConcertAvailableDates(concertId);
         List<ConcertDateResponseDTO> result = concertDateInfos.stream()
                 .map(concertDateInfo -> ConcertDateResponseDTO.from(concertDateInfo)).toList();
@@ -57,10 +56,10 @@ public class ConcertController implements ConcertApi{
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/{dateId}/seat")
+    @GetMapping("/{concertDateId}/seat")
     @Override
-    public ResponseEntity<List<ConcertSeatResponseDTO>> getConcertAvailableSeats(@PathVariable long dateId){
-        List<SeatInfo> seatInfos = seatService.getAvailableSeats(dateId);
+    public ResponseEntity<List<ConcertSeatResponseDTO>> getConcertAvailableSeats(@PathVariable("concertDateId") long concertDateId){
+        List<SeatInfo> seatInfos = seatService.getAvailableSeats(concertDateId);
         List<ConcertSeatResponseDTO> result = seatInfos.stream()
                 .map( seatInfo-> ConcertSeatResponseDTO.from(seatInfo)
                 ).toList();

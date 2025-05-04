@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.infra.queue;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.LockModeType;
 import kr.hhplus.be.server.domain.queue.QWaitingQueue;
 import kr.hhplus.be.server.domain.queue.WaitingQueue;
 import kr.hhplus.be.server.domain.queue.WaitingQueueStatus;
@@ -30,14 +31,13 @@ public class WaitingQueueRepositoryImpl implements WaitingQueueRepositoryCustom 
     }
 
     @Override
-    public long countByStatus(WaitingQueueStatus waitingQueueStatus) {
+    public List<WaitingQueue> getWaitingQueueStatus(WaitingQueueStatus waitingQueueStatus) {
         QWaitingQueue waitingQueue = QWaitingQueue.waitingQueue;
-        return queryFactory
-                .select(waitingQueue.count())
-                .from(waitingQueue)
-                .where(
-                        waitingQueue.status.eq(waitingQueueStatus)
-                ).fetchOne();
+        List<WaitingQueue> result = queryFactory
+                .selectFrom(waitingQueue)
+                .where(waitingQueue.status.eq(waitingQueueStatus))
+                .fetch();
+        return result;
     }
 
     @Override

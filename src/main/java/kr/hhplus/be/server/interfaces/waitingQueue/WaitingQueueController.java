@@ -19,7 +19,7 @@ public class WaitingQueueController implements WaitingQueueApi {
 
     @Override
     @GetMapping("/{userId}")
-    public ResponseEntity<ResponseToken> createWaitingQueue(@PathVariable long userId){
+    public ResponseEntity<ResponseToken> createWaitingQueue(@PathVariable("userId") long userId){
         WaitingQueueInfo waitingQueueInfo = waitingQueue.createWaitingQueue(userId);
         ResponseToken result =  ResponseToken.of(waitingQueueInfo.userId(), waitingQueueInfo.token());
         return ResponseEntity.ok(result);
