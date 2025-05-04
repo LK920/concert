@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.infra.seat;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.LockModeType;
 import kr.hhplus.be.server.domain.seat.QSeat;
 import kr.hhplus.be.server.domain.seat.Seat;
 import kr.hhplus.be.server.domain.seat.SeatRepository;
@@ -30,8 +31,8 @@ public class SeatRepositoryImpl implements SeatRepositoryCustom {
     public Seat findBySeatId(long seatId) {
         QSeat seat = QSeat.seat;
         return queryFactory.selectFrom(seat)
+                .setLockMode(LockModeType.OPTIMISTIC)
                 .where(seat.id.eq(seatId))
                 .fetchOne();
     }
-
 }

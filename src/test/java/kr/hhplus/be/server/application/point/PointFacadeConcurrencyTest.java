@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.application.point;
 
 import kr.hhplus.be.server.domain.payment.Payment;
-import kr.hhplus.be.server.domain.payment.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.PaymentRepository;
 import kr.hhplus.be.server.domain.point.Point;
 import kr.hhplus.be.server.domain.point.PointRepository;
@@ -12,15 +11,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -44,10 +44,12 @@ class PointFacadeConcurrencyTest {
     void charge_point_concurrency() throws InterruptedException {
         long userId = 1L;
         long chargeAmount = 100L;
-        int threadCnt = 10; // 동시 실행할 쓰레드 수
+        int threadCnt = 1000; // 동시 실행할 쓰레드 수
+        AtomicLong successCnt = new AtomicLong();
+        AtomicLong failCnt = new AtomicLong();
         Point userPoint = Point.create(userId, 0);
         pointRepository.save(userPoint);
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ExecutorService executorService = Executors.newFixedThreadPool(32);
 
         // CountDownLatch
         CountDownLatch startLatch = new CountDownLatch(1);
@@ -56,10 +58,11 @@ class PointFacadeConcurrencyTest {
         for (int i = 0; i < threadCnt; i++) {
             executorService.submit(() -> {
                 try {
-                    startLatch.await(); // 시작 시점 동기화
                     pointFacade.chargePoint(userId, chargeAmount);
+                    successCnt.getAndIncrement();
                 } catch (Exception e) {
                     log.error(e.getMessage());
+                    failCnt.getAndIncrement();
                 } finally {
                     endLatch.countDown();
                 }
@@ -70,14 +73,16 @@ class PointFacadeConcurrencyTest {
         endLatch.await(); // 모든 쓰레드가 끝날 때까지 대기
         executorService.shutdown();
 
+        log.info("성공 요청 수: {}", successCnt.get());
+        log.info("실패 요청 수: {}", failCnt.get());
+
         // 최종 포인트 확인
         PointCommand result = pointFacade.getUserPoint(userId);
-        long expectedPoint = chargeAmount * threadCnt;
+        long expectedPoint = chargeAmount * successCnt.get();
         assertThat(result.userPoint()).isEqualTo(expectedPoint);
 
         // 결제 내역 중복 확인
         List<Payment> payments = paymentRepository.findByUserId(userId);
-        assertThat(payments).hasSize(threadCnt); // 결제 내역은 각 쓰레드마다 하나씩 있어야 함
+        assertThat(payments).hasSize((int) successCnt.get()); // 결제 내역은 각 쓰레드마다 하나씩 있어야 함
     }
-
 }

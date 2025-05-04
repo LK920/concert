@@ -19,6 +19,15 @@ public class Point extends BaseTimeEntity {
     private long id;
     private long userId;
     private long point;
+    /*
+    * 트랜잭션 시작 시: DB에서 version=1 읽어옴
+    * 변경 후 저장할 때: WHERE id=xxx AND version=1
+    * 근데 만약 다른 트랜잭션이 먼저 version=2로 업데이트하면?
+    * 나중에 저장하려는 트랜잭션은 업데이트 실패(OptimisticLockException) 가 뜸.
+    * .save()만 호출하면 낙관적 락이 자동 적용
+    * */
+    @Version   // @Version => 낙관적 락 버전 관리 필드
+    private long version;
 
     private Point(long userId, long point){
         this.userId = userId;
