@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.application.reservation;
 
-import jakarta.persistence.PessimisticLockException;
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.payment.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.PaymentService;
@@ -9,9 +8,12 @@ import kr.hhplus.be.server.domain.point.PointService;
 import kr.hhplus.be.server.domain.reservation.ReservationInfo;
 import kr.hhplus.be.server.domain.reservation.ReservationService;
 import kr.hhplus.be.server.domain.seat.SeatService;
+import kr.hhplus.be.server.support.redis.RedisLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,14 +24,21 @@ public class ReservationFacade {
     private final ReservationService reservationService;
     private final PaymentService paymentService;
     private final SeatService seatService;
+    private final RedisLock redisLock;
 
     public ReservationInfo reserveConcert(ReserveConcertCommand reserveConcertCommand){
-        try {
-            // 좌석 상태 변경(사용 가능 -> 불가능)
-            seatService.reserveSeat(reserveConcertCommand.seatId());
-            // 예약 내역 등록
-            ReservationInfo reservationInfo = reservationService.createReservation(reserveConcertCommand.userId(), reserveConcertCommand.seatId());
+        String lockKey = "lock:seat:" + reserveConcertCommand.seatId();
+        String lockValue = "lock:value:" + UUID.randomUUID().toString();
+        boolean getLock = redisLock.tryLock(lockKey, lockValue);
 
+        if(!getLock){
+            throw new IllegalArgumentException("락 획득 실패했습니다.");
+        }
+        log.info("락 획득을 성공했습니다.");
+        try {
+            seatService.reserveSeat(reserveConcertCommand.seatId());
+            ReservationInfo reservationInfo = reservationService.createReservation(reserveConcertCommand.userId(), reserveConcertCommand.seatId());
+            log.info("예약은 성공");
             return processReservationTransaction(reserveConcertCommand, reservationInfo);
 
         }catch (IllegalArgumentException illegalArgumentException){
@@ -40,6 +49,8 @@ public class ReservationFacade {
         }catch (Exception e){
             log.error("예외 메시지: {}", e.getMessage(), e);
             throw new RuntimeException("예외 발생", e);
+        } finally {
+            redisLock.unLock(lockKey, lockValue);
         }
     }
 
