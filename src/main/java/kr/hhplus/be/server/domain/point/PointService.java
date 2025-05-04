@@ -31,7 +31,7 @@ public class PointService {
     @Transactional
     public void useUserPoint(long userId, long amount){
         // 포인트 데이터
-        Point point = findUserPointWithLock(userId, LockType.OPTIMISTIC);
+        Point point = pointRepository.findByUserId(userId).orElseThrow(()-> new EntityNotFoundException("해당 유저가 없습니다."));
         point.usePoint(amount);
         pointRepository.save(point);
     }
