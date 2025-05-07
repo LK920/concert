@@ -51,6 +51,7 @@ public class ReservationFacade {
             throw new RuntimeException("예외 발생", e);
         } finally {
             redisLock.unLock(lockKey, lockValue);
+            log.info("락을 해제합니다.");
         }
     }
 
