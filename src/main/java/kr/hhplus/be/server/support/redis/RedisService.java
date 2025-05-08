@@ -23,4 +23,8 @@ public class RedisService {
         redisTemplate.delete(key);
     }
 
+    public void flushAll(){
+        redisTemplate.getConnectionFactory().getConnection().serverCommands().flushAll();
+    }
+
 }
