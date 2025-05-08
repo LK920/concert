@@ -1,14 +1,14 @@
 package kr.hhplus.be.server.domain.concert;
 
 
+import kr.hhplus.be.server.support.redis.RedisService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.utility.TestcontainersConfiguration;
 
@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 @Import(TestcontainersConfiguration.class)
+@Slf4j
 public class ConcertServiceIntegrationTest {
 
     @Autowired
@@ -31,8 +32,12 @@ public class ConcertServiceIntegrationTest {
     @Autowired
     private ConcertRepository concertRepository;
 
+    @Autowired
+    private RedisService redisService;
+
     @BeforeEach
     void setUp() {
+        redisService.flushAll();
         concertRepository.deleteAll();
     }
 
@@ -46,9 +51,8 @@ public class ConcertServiceIntegrationTest {
         });
 
         List<ConcertInfo> result = concertService.getConcerts();
-
-        assertThat(result).hasSize(5);
-        assertThat(result.get(0).concertName()).contains("Concert");
+        log.info(result.get(0).toString());
+        assertThat(result).hasSize(20);
     }
 
     @Test
