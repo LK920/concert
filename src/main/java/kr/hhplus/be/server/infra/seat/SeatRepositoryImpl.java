@@ -31,7 +31,6 @@ public class SeatRepositoryImpl implements SeatRepositoryCustom {
     public Seat findBySeatId(long seatId) {
         QSeat seat = QSeat.seat;
         return queryFactory.selectFrom(seat)
-                .setLockMode(LockModeType.OPTIMISTIC)
                 .where(seat.id.eq(seatId))
                 .fetchOne();
     }

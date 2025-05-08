@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.config;
 
-import kr.hhplus.be.server.interceptor.TokenInterceptor;
+import kr.hhplus.be.server.support.interceptor.TokenInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

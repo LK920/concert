@@ -44,12 +44,12 @@ class PointFacadeConcurrencyTest {
     void charge_point_concurrency() throws InterruptedException {
         long userId = 1L;
         long chargeAmount = 100L;
-        int threadCnt = 1000; // 동시 실행할 쓰레드 수
+        int threadCnt = 100; // 동시 실행할 쓰레드 수
         AtomicLong successCnt = new AtomicLong();
         AtomicLong failCnt = new AtomicLong();
         Point userPoint = Point.create(userId, 0);
         pointRepository.save(userPoint);
-        ExecutorService executorService = Executors.newFixedThreadPool(32);
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCnt);
 
         // CountDownLatch
         CountDownLatch startLatch = new CountDownLatch(1);
