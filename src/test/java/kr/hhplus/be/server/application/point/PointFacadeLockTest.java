@@ -54,7 +54,7 @@ public class PointFacadeLockTest {
         for(int i = 0; i<threadCnt; i++){
             executorService.submit(()->{
                 try{
-                    pointFacade.chargePointV2(userId, amount);
+                    pointFacade.chargePoint(userId, amount);
                     successCnt.getAndIncrement();
                 } catch (Exception e) {
                     log.error(e.getMessage());
