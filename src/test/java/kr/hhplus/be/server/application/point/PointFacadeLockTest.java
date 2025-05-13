@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -31,6 +32,12 @@ public class PointFacadeLockTest {
     @Autowired
     private PointRepository pointRepository;
 
+
+    @Test
+    void checkAOPProxy() {
+        log.info("is AOP proxy : {}", AopUtils.isAopProxy(pointFacade));
+    }
+
     @Test
     @DisplayName("동시에_N개_의_충전_요청이_들어오면_하나만_성공")
     void pointCharge_success_when_same_time() throws InterruptedException {
@@ -47,7 +54,7 @@ public class PointFacadeLockTest {
         for(int i = 0; i<threadCnt; i++){
             executorService.submit(()->{
                 try{
-                    pointFacade.chargePoint(userId, amount);
+                    pointFacade.chargePointV2(userId, amount);
                     successCnt.getAndIncrement();
                 } catch (Exception e) {
                     log.error(e.getMessage());
