@@ -60,6 +60,11 @@ dependencies {
 	annotationProcessor("com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
 	annotationProcessor("jakarta.annotation:jakarta.annotation-api")
 	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+
+	// redis
+	// redisson
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+	implementation ("org.redisson:redisson-spring-boot-starter:3.23.5")
 }
 
 tasks.withType<Test> {

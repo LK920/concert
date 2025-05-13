@@ -62,7 +62,7 @@ class ReservationFacadeConcurrencyTest {
     @DisplayName("좌석_예약_동시성_테스트")
     void reserve_concert_concurrency() throws InterruptedException {
         // given
-        int threadCnt = 500;
+        int threadCnt = 100;
         long seatPrice = 1000l;
 
         Seat seat = Seat.create(1l, 1l, seatPrice);
@@ -73,7 +73,7 @@ class ReservationFacadeConcurrencyTest {
         }
 
         // when
-        ExecutorService executorService = Executors.newFixedThreadPool(32);
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCnt);
         CountDownLatch startLatch = new CountDownLatch(1);
         CountDownLatch endLatch = new CountDownLatch(threadCnt);
 

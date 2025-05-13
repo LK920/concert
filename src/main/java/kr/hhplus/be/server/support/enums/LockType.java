@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.common.enums;
+package kr.hhplus.be.server.support.enums;
 
 public enum LockType {
     OPTIMISTIC,
