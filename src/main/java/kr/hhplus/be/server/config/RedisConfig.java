@@ -44,7 +44,7 @@ public class RedisConfig {
         om.registerModule(new JavaTimeModule());
         om.activateDefaultTyping(
                 LaissezFaireSubTypeValidator.instance,
-                ObjectMapper.DefaultTyping.EVERYTHING,
+                ObjectMapper.DefaultTyping.NON_FINAL_AND_ENUMS,
                 JsonTypeInfo.As.PROPERTY
         );
 

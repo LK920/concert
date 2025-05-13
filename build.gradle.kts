@@ -61,6 +61,8 @@ dependencies {
 	annotationProcessor("jakarta.annotation:jakarta.annotation-api")
 	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 
+	// spring AOP
+	implementation ("org.springframework.boot:spring-boot-starter-aop")
 	// redis
 	// redisson
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
