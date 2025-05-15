@@ -65,8 +65,8 @@ class ReservationFacadeIntegrationTest {
     @DisplayName("콘서트_예약_잔액_부족_예약_내역만_생성")
     void reserveConcert_insufficient() {
         long userId = 1l;
-
-        ReserveConcertCommand command = new ReserveConcertCommand(userId, savedSeat.getId(), savedSeat.getConcertSeatPrice());
+        long concertId = 1l;
+        ReserveConcertCommand command = new ReserveConcertCommand(concertId, userId, savedSeat.getId(), savedSeat.getConcertSeatPrice());
 
         ReservationInfo info = reservationFacade.reserveConcert(command);
 
@@ -82,9 +82,10 @@ class ReservationFacadeIntegrationTest {
     void reserveConcert() {
         long userId = 1l;
         long chargePoint = 3000l;
+        long concertId = 2l;
         pointService.chargeUserPoint(userId,chargePoint);
 
-        ReserveConcertCommand command = new ReserveConcertCommand(userId, savedSeat.getId(), savedSeat.getConcertSeatPrice());
+        ReserveConcertCommand command = new ReserveConcertCommand(concertId, userId, savedSeat.getId(), savedSeat.getConcertSeatPrice());
 
         ReservationInfo info = reservationFacade.reserveConcert(command);
 
@@ -102,9 +103,10 @@ class ReservationFacadeIntegrationTest {
     void processReservationTransaction_success() {
         long userId = 1L;
         long seatPrice = 3000L;
+        long concertId = 1l;
         PointInfo initialPoint = pointService.getUserPoint(userId);
         pointService.chargeUserPoint(userId, seatPrice);
-        ReserveConcertCommand command = new ReserveConcertCommand(userId, savedSeat.getId(), savedSeat.getConcertSeatPrice());
+        ReserveConcertCommand command = new ReserveConcertCommand(concertId,userId, savedSeat.getId(), savedSeat.getConcertSeatPrice());
         ReservationInfo reservationInfo = reservationService.createReservation(savedSeat.getId(), userId);
         List<PaymentInfo> paymentsBefore = paymentService.getUserPaymentList(userId);
         long initialPaymentSize = paymentsBefore.size();
