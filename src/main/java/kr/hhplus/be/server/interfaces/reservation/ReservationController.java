@@ -22,11 +22,9 @@ public class ReservationController implements ReservationApi{
     @Override
     @PostMapping("/reserve")
     public ResponseEntity<ReserveResponseDTO> reserveConcert(@RequestBody ReserveRequestDTO reqeust){
-        ReserveConcertCommand command = new ReserveConcertCommand(reqeust.userId(), reqeust.seatId(), reqeust.seatPrice());
+        ReserveConcertCommand command = new ReserveConcertCommand(reqeust.concertId(), reqeust.userId(), reqeust.seatId(), reqeust.seatPrice());
         ReservationInfo reservationInfo = reservationFacade.reserveConcert(command);
         ReserveResponseDTO result = new ReserveResponseDTO(reservationInfo.reservationId(), reservationInfo.userId(), reservationInfo.seatId(), reservationInfo.reservationStatus().toString());
         return ResponseEntity.ok(result);
     }
-
-
 }
