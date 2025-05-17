@@ -2,6 +2,8 @@ package kr.hhplus.be.server.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
+import org.redisson.client.codec.StringCodec;
+import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,7 @@ public class RedissonConfig {
     @Bean
     public RedissonClient redissonClient(){
         Config config = new Config();
+        config.setCodec(new StringCodec());
         config.useSingleServer()
                 .setAddress(REDISSON_HOST_PREFIX + host + ":" + port);
         return Redisson.create(config);
