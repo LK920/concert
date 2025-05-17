@@ -52,11 +52,12 @@ public class RedisWaitingQueueStorage implements WaitingQueueStorage {
     }
 
     @Override
-    public long getOldestActiveRemainingMillis() {
+    public long getOldestActiveRemainingMillis(long waitingNumber) {
         List<Object> activeList = redissonClient.getList(ACTIVE_LIST_KEY).readAll();
         if (activeList.isEmpty()) return 0;
         String oldest = (String) activeList.get(0);
-        return redissonClient.getBucket(TOKEN_TTL_KEY_PREFIX + oldest).remainTimeToLive();
+        long remainTime = redissonClient.getBucket(TOKEN_TTL_KEY_PREFIX + oldest).remainTimeToLive();
+        return waitingNumber * ACTIVE_DURATION.toMinutes() + remainTime;
     }
 
     @Override

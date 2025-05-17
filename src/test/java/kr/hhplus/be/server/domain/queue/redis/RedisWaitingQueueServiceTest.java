@@ -92,7 +92,7 @@ class RedisWaitingQueueServiceTest {
         when(waitingQueueStorage.isActive(token)).thenReturn(false);
         when(waitingQueueStorage.getActiveCount()).thenReturn(3); // Full
         when(waitingQueueStorage.getWaitingNumber(token)).thenReturn(5);
-        when(waitingQueueStorage.getOldestActiveRemainingMillis()).thenReturn(30000L);
+        when(waitingQueueStorage.getOldestActiveRemainingMillis(5)).thenReturn(30000L);
 
         // when
         RedisQueueStatusResponse response = waitingQueueService.getWaitingQueue(token);

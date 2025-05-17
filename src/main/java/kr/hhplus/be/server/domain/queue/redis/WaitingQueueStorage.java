@@ -12,7 +12,7 @@ public interface WaitingQueueStorage {
 
     int getWaitingNumber(String token);
 
-    long getOldestActiveRemainingMillis();
+    long getOldestActiveRemainingMillis(long waitingNumber);
 
     void activate(String token);
 

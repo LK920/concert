@@ -32,7 +32,6 @@ public class RankingService {
     }
 
     public void setAggregateRanking(int days, String targetKey){
-
         // 어제까지 N일 전까지 key 수집 ["concert:ranking:20250501", "concert:ranking:20250502"....]
         List<String> keys = generateKeys(days);
         // 1. Redis ZUNIONSTORE로 합산 (임시 key 사용 후 삭제) -> score 합산
@@ -47,7 +46,6 @@ public class RankingService {
         List<String> rankingJsonList = concertRankingJson(concertIds);
         // 4. Redis List 저장
         saveRankingResult(targetKey, rankingJsonList);
-
     }
 
     private List<String> generateKeys(int days){

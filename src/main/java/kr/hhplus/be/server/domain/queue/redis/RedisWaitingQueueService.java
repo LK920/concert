@@ -39,7 +39,7 @@ public class RedisWaitingQueueService {
 
         // WAITING 상태인 경우, 대기 순번 및 남은 시간 반환
         long waitingNumber = waitingQueueStorage.getWaitingNumber(token); //대기열 큐에서 순서 리턴
-        long remainedMillis = waitingQueueStorage.getOldestActiveRemainingMillis(); // 가장 먼저 만료되는 활성 토큰 남은 시간
+        long remainedMillis = waitingQueueStorage.getOldestActiveRemainingMillis(waitingNumber); // 가장 먼저 만료되는 활성 토큰 남은 시간
         return RedisQueueStatusResponse.waiting(token, userId, waitingNumber, remainedMillis); //대기번호, 남은시간, 정보 리턴
     }
 
