@@ -40,8 +40,8 @@ class ReservationControllerTest {
         long seatPrice = 50000L;
         long paymentId = 1l;
 
-        ReserveRequestDTO requestDTO = new ReserveRequestDTO(userId, seatId, seatPrice);
-        ReserveConcertCommand reserveConcertCommand = new ReserveConcertCommand(userId,seatId,seatPrice);
+        ReserveRequestDTO requestDTO = new ReserveRequestDTO(1l, userId, seatId, seatPrice);
+        ReserveConcertCommand reserveConcertCommand = new ReserveConcertCommand(1l,userId,seatId,seatPrice);
         ReservationInfo reservationInfo = new ReservationInfo(
                 100L, // reservationId
                 userId,

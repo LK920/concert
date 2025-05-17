@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface ConcertRepositoryCustom {
     List<Concert> findAllConcerts();
+    List<Concert> findAllByIdIn(List<Long> concertIds);
 }

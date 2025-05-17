@@ -67,6 +67,7 @@ dependencies {
 	// redisson
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation ("org.redisson:redisson-spring-boot-starter:3.23.5")
+	testImplementation("it.ozimov:embedded-redis:0.7.2")
 	// cache
 	implementation ("org.springframework.boot:spring-boot-starter-cache")
 }

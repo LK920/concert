@@ -82,7 +82,7 @@ class ReservationFacadeConcurrencyTest {
             executorService.submit(()->{
                 try {
                     startLatch.await();
-                    ReserveConcertCommand command = new ReserveConcertCommand(userId, savedSeat.getId(), seatPrice);
+                    ReserveConcertCommand command = new ReserveConcertCommand(1l, userId, savedSeat.getId(), seatPrice);
                     reservationFacade.reserveConcert(command);
                 } catch (Exception e) {
                     log.error("예약 실패 : {}",e.getMessage());

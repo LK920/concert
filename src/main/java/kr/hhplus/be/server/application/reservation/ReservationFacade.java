@@ -5,6 +5,7 @@ import kr.hhplus.be.server.domain.payment.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.domain.payment.PaymentType;
 import kr.hhplus.be.server.domain.point.PointService;
+import kr.hhplus.be.server.domain.ranking.RankingService;
 import kr.hhplus.be.server.domain.reservation.ReservationInfo;
 import kr.hhplus.be.server.domain.reservation.ReservationService;
 import kr.hhplus.be.server.domain.seat.SeatService;
@@ -25,6 +26,7 @@ public class ReservationFacade {
     private final PaymentService paymentService;
     private final SeatService seatService;
     private final RedisLock redisLock;
+    private final RankingService rankingService;
 
     public ReservationInfo reserveConcert(ReserveConcertCommand reserveConcertCommand){
         String lockKey = "lock:seat:" + reserveConcertCommand.seatId();
@@ -38,7 +40,7 @@ public class ReservationFacade {
         try {
             seatService.reserveSeat(reserveConcertCommand.seatId());
             ReservationInfo reservationInfo = reservationService.createReservation(reserveConcertCommand.userId(), reserveConcertCommand.seatId());
-            log.info("예약은 성공");
+            rankingService.addConcertRankingScore(reserveConcertCommand.concertId());
             return processReservationTransaction(reserveConcertCommand, reservationInfo);
 
         }catch (IllegalArgumentException illegalArgumentException){

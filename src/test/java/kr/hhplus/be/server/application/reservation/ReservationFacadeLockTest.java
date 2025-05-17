@@ -83,7 +83,7 @@ public class ReservationFacadeLockTest {
             long newUserId = i + 1;
             executorService.submit(()->{
                try{
-                   reserveConcertCommand = new ReserveConcertCommand(newUserId,seatId, seatPrice);
+                   reserveConcertCommand = new ReserveConcertCommand(1l,newUserId,seatId, seatPrice);
                    reservationInfo = reservationFacade.reserveConcert(reserveConcertCommand);
                }catch (Exception e){
                    failCnt.getAndIncrement();
