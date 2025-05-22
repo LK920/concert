@@ -1,5 +1,8 @@
 package kr.hhplus.be.server.domain.reservation;
 
+import kr.hhplus.be.server.domain.events.ReservationCreatedEvent;
+import kr.hhplus.be.server.domain.point.eventHandler.PointEventListener;
+import kr.hhplus.be.server.infra.event.DomainEventPublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.utility.TestcontainersConfiguration;
 
@@ -15,9 +20,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
-@Transactional
 @ActiveProfiles("test")
 @Import(TestcontainersConfiguration.class)
 class ReservationServiceIntegrationTest {
@@ -25,6 +32,10 @@ class ReservationServiceIntegrationTest {
     private ReservationService reservationService;
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @MockitoSpyBean
+    private PointEventListener pointEventListener; // 실 리스너 감시
+
 
     @BeforeEach
     void setUp(){
@@ -36,12 +47,17 @@ class ReservationServiceIntegrationTest {
     void createReservation() {
         long seatId = 1l;
         long userId = 1l;
+        long concertId = 1l;
+        long seatPrice = 1000l;
 
-        ReservationInfo result = reservationService.createReservation(seatId,userId);
+        ReservationInfo result = reservationService.createReservation(userId, concertId, seatId, seatPrice);
 
         assertThat(result.userId()).isEqualTo(userId);
         assertThat(result.seatId()).isEqualTo(seatId);
         assertThat(result.reservationStatus()).isEqualTo(ReservationStatus.PENDING);
+
+        verify(pointEventListener, timeout(2000)).handleReservationCompleted(any(ReservationCreatedEvent.class));
+
     }
 
     @Test
@@ -70,7 +86,7 @@ class ReservationServiceIntegrationTest {
     @Test
     @DisplayName("예약_내역_결제_내역_추가_성공")
     void updatePaymentInfo_success() {
-        ReservationInfo info = reservationService.createReservation(1l, 1l);
+        ReservationInfo info = reservationService.createReservation(1l, 1l, 1l, 1000l);
         long paymentId = 1l;
 
         ReservationInfo result = reservationService.updatePaymentInfo(info.reservationId(), paymentId);

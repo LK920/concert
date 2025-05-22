@@ -4,10 +4,7 @@ import kr.hhplus.be.server.domain.payment.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.PaymentRepository;
 import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.domain.point.*;
-import kr.hhplus.be.server.domain.reservation.Reservation;
-import kr.hhplus.be.server.domain.reservation.ReservationInfo;
-import kr.hhplus.be.server.domain.reservation.ReservationService;
-import kr.hhplus.be.server.domain.reservation.ReservationStatus;
+import kr.hhplus.be.server.domain.reservation.*;
 import kr.hhplus.be.server.domain.seat.Seat;
 import kr.hhplus.be.server.domain.seat.SeatRepository;
 import kr.hhplus.be.server.domain.seat.SeatService;
@@ -22,12 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
 @ActiveProfiles("test")
 class ReservationFacadeIntegrationTest {
     @Autowired
@@ -46,6 +44,8 @@ class ReservationFacadeIntegrationTest {
     private SeatRepository seatRepository;
     @Autowired
     private PaymentRepository paymentRepository;
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     private Seat savedSeat;
 
@@ -79,7 +79,7 @@ class ReservationFacadeIntegrationTest {
 
     @Test
     @DisplayName("콘서트_예약")
-    void reserveConcert() {
+    void reserveConcert() throws InterruptedException {
         long userId = 1l;
         long chargePoint = 3000l;
         long concertId = 2l;
@@ -87,44 +87,34 @@ class ReservationFacadeIntegrationTest {
 
         ReserveConcertCommand command = new ReserveConcertCommand(concertId, userId, savedSeat.getId(), savedSeat.getConcertSeatPrice());
 
-        ReservationInfo info = reservationFacade.reserveConcert(command);
+        ReservationInfo saved = reservationFacade.reserveConcert(command);
 
-        List<PaymentInfo> paymentList = paymentService.getUserPaymentList(userId);
-        Optional<Seat> seat = seatRepository.findById(savedSeat.getId());
-        assertThat(info.userId()).isEqualTo(userId);
-        assertThat(info.reservationStatus()).isEqualTo(ReservationStatus.COMPLETE);
-        PaymentInfo latestPayment = paymentList.get(paymentList.size()-1);
-        assertThat(info.paymentId()).isEqualTo(latestPayment.paymentId());
-        assertThat(seat.get().getSeatStatus()).isEqualTo(SeatStatus.DISABLE);
+        // Then: Await until 예약 상태가 COMPLETE가 되고, 결제까지 연결되었는지 확인
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            // 1. 예약 상태 확인
+            Reservation reservation = reservationRepository.findByReservationId(saved.reservationId());
+            assertThat(reservation.getReservationStatus()).isEqualTo(ReservationStatus.COMPLETE);
+
+            // 2. 결제 내역이 등록되었는지 확인
+            List<PaymentInfo> payments = paymentService.getUserPaymentList(userId);
+            assertThat(payments).isNotEmpty();
+            PaymentInfo latestPayment = payments.get(payments.size() - 1);
+            assertThat(reservation.getPaymentId()).isEqualTo(latestPayment.paymentId());
+
+            // 3. 좌석 상태가 비활성화 되었는지 확인
+            Seat updatedSeat = seatRepository.findById(savedSeat.getId()).orElseThrow();
+            assertThat(updatedSeat.getSeatStatus()).isEqualTo(SeatStatus.DISABLE);
+        });
+
+//        List<PaymentInfo> paymentList = paymentService.getUserPaymentList(userId);
+//        Optional<Seat> seat = seatRepository.findById(savedSeat.getId());
+//        Thread.sleep(10000);
+//        Reservation info = reservationRepository.findByReservationId(saved.reservationId());
+//        assertThat(info.getUserId()).isEqualTo(userId);
+//        assertThat(info.getReservationStatus()).isEqualTo(ReservationStatus.COMPLETE);
+//        PaymentInfo latestPayment = paymentList.get(paymentList.size()-1);
+//        assertThat(info.getPaymentId()).isEqualTo(latestPayment.paymentId());
+//        assertThat(seat.get().getSeatStatus()).isEqualTo(SeatStatus.DISABLE);
     }
 
-    @Test
-    @DisplayName("예약_처리_성공")
-    void processReservationTransaction_success() {
-        long userId = 1L;
-        long seatPrice = 3000L;
-        long concertId = 1l;
-        PointInfo initialPoint = pointService.getUserPoint(userId);
-        pointService.chargeUserPoint(userId, seatPrice);
-        ReserveConcertCommand command = new ReserveConcertCommand(concertId,userId, savedSeat.getId(), savedSeat.getConcertSeatPrice());
-        ReservationInfo reservationInfo = reservationService.createReservation(savedSeat.getId(), userId);
-        List<PaymentInfo> paymentsBefore = paymentService.getUserPaymentList(userId);
-        long initialPaymentSize = paymentsBefore.size();
-
-        // when
-        ReservationInfo updatedReservation = reservationFacade.processReservationTransaction(command, reservationInfo);
-
-        // then
-        List<PaymentInfo> paymentsAfter = paymentService.getUserPaymentList(userId);
-        assertThat(paymentsAfter.size()).isEqualTo(initialPaymentSize + 1);
-
-        PaymentInfo newPayment = paymentsAfter.get(paymentsAfter.size() - 1);
-
-        assertThat(updatedReservation.paymentId()).isEqualTo(newPayment.paymentId());
-        assertThat(updatedReservation.reservationStatus()).isEqualTo(ReservationStatus.COMPLETE);
-
-        // 포인트가 0이 되었는지 확인
-        PointInfo remainingPoint = pointService.getUserPoint(userId);
-        assertThat(remainingPoint.userPoint()).isEqualTo(initialPoint.userPoint());
-    }
 }

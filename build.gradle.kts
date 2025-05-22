@@ -70,6 +70,8 @@ dependencies {
 	implementation("com.redis:testcontainers-redis:2.2.4")
 	// cache
 	implementation ("org.springframework.boot:spring-boot-starter-cache")
+	// awaitility
+	implementation("org.awaitility:awaitility-kotlin:4.3.0")
 }
 
 tasks.withType<Test> {
