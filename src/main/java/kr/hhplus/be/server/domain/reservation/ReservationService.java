@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.reservation;
 
+import kr.hhplus.be.server.domain.events.ReservationCompletedEvent;
 import kr.hhplus.be.server.domain.events.ReservationCreatedEvent;
 import kr.hhplus.be.server.domain.events.ReservationFailedEvent;
 import kr.hhplus.be.server.infra.event.DomainEventPublisher;
@@ -30,6 +31,14 @@ public class ReservationService {
             // 예약 생성 후 이벤트 발행
             domainEventPublisher.publish(
                     new ReservationCreatedEvent(userId, concertId, saved.getId(), seatId, seatPrice));
+
+            // 데이터 플랫폼에 mock api 전송
+            domainEventPublisher.publish(new ReservationCompletedEvent(
+                    userId,
+                    saved.getId(),
+                    concertId,
+                    seatId
+            ));
 
             return ReservationInfo.from(saved);
 
