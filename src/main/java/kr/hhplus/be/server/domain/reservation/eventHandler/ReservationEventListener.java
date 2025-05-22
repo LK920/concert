@@ -5,6 +5,7 @@ import kr.hhplus.be.server.domain.reservation.ReservationInfo;
 import kr.hhplus.be.server.domain.reservation.ReservationService;
 import kr.hhplus.be.server.infra.external.DataPlatformClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -17,7 +18,7 @@ public class ReservationEventListener {
     private final DataPlatformClient dataPlatformClient;
 
     @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @EventListener
     public void handlePaymentCreated(PaymentCreatedEvent event){
         ReservationInfo updated = reservationService.updatePaymentInfo(event.reservationId(), event.paymentId());
         dataPlatformClient.sendReservation(updated);
