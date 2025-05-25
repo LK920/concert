@@ -26,7 +26,6 @@ public class PointService {
     @Transactional
     public PointInfo chargeUserPoint(long userId, long amount){
         // 포인트 데이터
-//        Point point = findUserPointWithLock(userId, LockType.OPTIMISTIC);
         Point point = pointRepository.findByUserId(userId).orElseThrow(()-> new EntityNotFoundException("해당 유저가 없습니다."));
         point.chargePoint(amount);
         Point saved = pointRepository.save(point);
@@ -41,6 +40,7 @@ public class PointService {
         point.usePoint(amount);
         pointRepository.save(point);
     }
+
     // db lock
     private Point findUserPointWithLock(long userId, LockType lockType){
         switch (lockType){

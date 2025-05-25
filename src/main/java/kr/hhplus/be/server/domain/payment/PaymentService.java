@@ -26,5 +26,4 @@ public class PaymentService {
                 payment -> PaymentInfo.from(payment)
         ).toList();
     }
-
 }
