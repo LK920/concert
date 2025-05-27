@@ -24,13 +24,7 @@ public class PaymentEventListener {
     @Async
     @EventListener
     public void handlePointUsed(PointUsedEvent event){
-        log.info("여기서 읽어줘야합니다.");
-        try{
-            PaymentInfo paymentInfo = paymentService.createPayment(event.userId(), event.seatPrice(), PaymentType.USE);
-            publisher.publish(new PaymentCreatedEvent(event.userId(), event.concertId(), event.reservationId(), paymentInfo.paymentId()));
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        PaymentInfo paymentInfo = paymentService.createPayment(event.userId(), event.seatPrice(), PaymentType.USE);
+        publisher.publish(new PaymentCreatedEvent(event.userId(), event.concertId(), event.reservationId(), paymentInfo.paymentId()));
     }
 }

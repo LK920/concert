@@ -90,7 +90,7 @@ class ReservationFacadeIntegrationTest {
         ReservationInfo saved = reservationFacade.reserveConcert(command);
 
         // Then: Await until 예약 상태가 COMPLETE가 되고, 결제까지 연결되었는지 확인
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
             // 1. 예약 상태 확인
             Reservation reservation = reservationRepository.findByReservationId(saved.reservationId());
             assertThat(reservation.getReservationStatus()).isEqualTo(ReservationStatus.COMPLETE);
