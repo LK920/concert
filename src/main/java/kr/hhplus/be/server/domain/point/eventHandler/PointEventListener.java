@@ -35,7 +35,7 @@ public class PointEventListener {
                     event.seatId(),
                     event.seatPrice()
             ));
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             log.warn("[포인트 사용 실패] - 메시지 : {}", e.getMessage());
             // 포인트 차감 실패 후 보상 이벤트 발행 유저에게 재 결제 알림 전달
             publisher.publish(new PointUsingFailedEvent(

@@ -24,24 +24,13 @@ public class ReservationService {
     @Transactional
     public ReservationInfo createReservation(long userId, long concertId, long seatId, long seatPrice){
         try{
-            // 예약 내역 저장만 한다
             Reservation reservation = Reservation.create(seatId,userId);
             Reservation saved = reservationRepository.save(reservation);
 
-            // 예약 생성 후 이벤트 발행
             domainEventPublisher.publish(
                     new ReservationCreatedEvent(userId, concertId, saved.getId(), seatId, seatPrice));
 
-            // 데이터 플랫폼에 mock api 전송
-            domainEventPublisher.publish(new ReservationCompletedEvent(
-                    userId,
-                    saved.getId(),
-                    concertId,
-                    seatId
-            ));
-
             return ReservationInfo.from(saved);
-
         } catch (DataIntegrityViolationException e) {
             log.warn("이미 예약된 좌석입니다.");
             // 예약 실패 후 좌석 해제 이벤트 발행

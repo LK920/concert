@@ -34,7 +34,6 @@ public class SeatService {
     public void cancelSeat(long seatId){
         Seat seat = seatRepository.findBySeatId(seatId);
         seat.cancelSeatReservation();
-        seatRepository.save(seat);
     }
 
 }
