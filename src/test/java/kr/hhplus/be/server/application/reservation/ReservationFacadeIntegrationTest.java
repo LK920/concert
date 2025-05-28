@@ -106,15 +106,6 @@ class ReservationFacadeIntegrationTest {
             assertThat(updatedSeat.getSeatStatus()).isEqualTo(SeatStatus.DISABLE);
         });
 
-//        List<PaymentInfo> paymentList = paymentService.getUserPaymentList(userId);
-//        Optional<Seat> seat = seatRepository.findById(savedSeat.getId());
-//        Thread.sleep(10000);
-//        Reservation info = reservationRepository.findByReservationId(saved.reservationId());
-//        assertThat(info.getUserId()).isEqualTo(userId);
-//        assertThat(info.getReservationStatus()).isEqualTo(ReservationStatus.COMPLETE);
-//        PaymentInfo latestPayment = paymentList.get(paymentList.size()-1);
-//        assertThat(info.getPaymentId()).isEqualTo(latestPayment.paymentId());
-//        assertThat(seat.get().getSeatStatus()).isEqualTo(SeatStatus.DISABLE);
     }
 
 }

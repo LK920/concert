@@ -1,7 +1,6 @@
-package kr.hhplus.be.server.domain;
+package kr.hhplus.be.server.infra.external.dataplatform;
 
-import kr.hhplus.be.server.domain.events.ReservationCompletedEvent;
-import kr.hhplus.be.server.infra.external.DataPlatformClient;
+import kr.hhplus.be.server.domain.reservation.events.ReservationCompletedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
