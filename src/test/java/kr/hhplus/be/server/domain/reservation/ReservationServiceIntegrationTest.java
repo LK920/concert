@@ -1,8 +1,7 @@
 package kr.hhplus.be.server.domain.reservation;
 
-import kr.hhplus.be.server.domain.events.ReservationCreatedEvent;
+import kr.hhplus.be.server.domain.reservation.events.ReservationCreatedEvent;
 import kr.hhplus.be.server.domain.point.eventHandler.PointEventListener;
-import kr.hhplus.be.server.infra.event.DomainEventPublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,15 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.utility.TestcontainersConfiguration;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;

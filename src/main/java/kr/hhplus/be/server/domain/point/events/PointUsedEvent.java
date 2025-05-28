@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.events;
+package kr.hhplus.be.server.domain.point.events;
 
 public record PointUsedEvent(
         long userId,

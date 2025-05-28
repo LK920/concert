@@ -20,6 +20,34 @@ spring:
     properties:
       hibernate.timezone.default_storage: NORMALIZE_UTC
       hibernate.jdbc.time_zone: UTC
+  kafka:
+    bootstrap-servers: localhost:10000,localhost:10001,localhost:10002
+    properties:
+      spring.json.trusted.packages: "*"
+      request.timeout.ms: 20000
+      retry.backoff.ms: 500
+    producer:
+      client-id: 프로듀서 ID 로 쓰일 값
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 5
+    consumer:
+      group-id: test-consumer
+      auto-offset-reset: latest
+      # 컨슈머가 붙었을 때, 내가 원하는 곳부터 땡겨온다.
+      # 처음 붙었을 때. ( 다시 붙었을 대. ) 어디부터? 를 결정해야함
+      # latest : 최신 ( 앞의 못읽었던 메세지는 안 읽는다 )
+      # earliest : 카프카에 적재되어있는 제일 오래된 메세지부터 ( 읽었던 메세지를 또 읽을 수도 있음 )
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        enable-auto-commit: false
+    listener:
+      ack-mode: manual # 수동으로 커밋하겠다.
+      # acknowledge: Acknowledge 라는 객체를 파라미터로 받음 ( 카프카 리스너 함수에서 )
+      # acknowledge.acknowledge() // 요 함수를 호출하면, 그 때 명시적으로 커밋을 날리겠다.
+      concurrency: 2 # 메세지를 병렬로 처리하기 위해서 생성하는 스레드 수
+      # 하나의 리스너에 대해서 2개의 스레드가 병렬로 메세지를 소비한다.
 
 ---
 spring.config.activate.on-profile: local, test

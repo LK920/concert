@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.domain.seat.eventHandler;
 
-import kr.hhplus.be.server.domain.events.ReservationFailedEvent;
+import kr.hhplus.be.server.domain.reservation.events.ReservationFailedEvent;
 import kr.hhplus.be.server.domain.seat.SeatService;
-import kr.hhplus.be.server.infra.external.DataPlatformClient;
+import kr.hhplus.be.server.infra.external.dataplatform.DataPlatformClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

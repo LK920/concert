@@ -44,6 +44,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
+	testImplementation("org.testcontainers:kafka")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testCompileOnly("org.projectlombok:lombok:1.18.38")
 	testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
@@ -72,6 +73,8 @@ dependencies {
 	implementation ("org.springframework.boot:spring-boot-starter-cache")
 	// awaitility
 	implementation("org.awaitility:awaitility-kotlin:4.3.0")
+	// kafka
+	implementation("org.springframework.kafka:spring-kafka")
 }
 
 tasks.withType<Test> {

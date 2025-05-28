@@ -1,8 +1,7 @@
 package kr.hhplus.be.server.domain.reservation;
 
-import kr.hhplus.be.server.domain.events.ReservationCompletedEvent;
-import kr.hhplus.be.server.domain.events.ReservationCreatedEvent;
-import kr.hhplus.be.server.domain.events.ReservationFailedEvent;
+import kr.hhplus.be.server.domain.reservation.events.ReservationCreatedEvent;
+import kr.hhplus.be.server.domain.reservation.events.ReservationFailedEvent;
 import kr.hhplus.be.server.infra.event.DomainEventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
