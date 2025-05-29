@@ -1,6 +1,9 @@
 package kr.hhplus.be.server.infra.external.kafka;
 
 import kr.hhplus.be.server.domain.point.events.PointUsingFailedEvent;
+import kr.hhplus.be.server.domain.queue.events.ActivatedTokenEvent;
+import kr.hhplus.be.server.domain.queue.events.UserNotifiedEvent;
+import kr.hhplus.be.server.domain.queue.events.WaitingTokenEvent;
 import kr.hhplus.be.server.domain.reservation.events.ReservationCompletedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -22,6 +25,18 @@ public class KafkaMessageProducer {
 
     public void sendReservationCompletedEvent(ReservationCompletedEvent event) {
         send("reservation-completed", String.valueOf(event.reservationId()), event);
+    }
+
+    public void sendWaitingToken(WaitingTokenEvent event){
+        send("waiting-token", String.valueOf(event.concertId()), event);
+    }
+
+    public void sendActivatedToken(ActivatedTokenEvent event){
+        send("activated-token", String.valueOf(event.concertId()), event);
+    }
+
+    public void sendNotification(UserNotifiedEvent event){
+        send("notification", String.valueOf(event.userId()), event);
     }
 
 }
