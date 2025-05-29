@@ -27,12 +27,12 @@ spring:
       request.timeout.ms: 20000
       retry.backoff.ms: 500
     producer:
-      client-id: 프로듀서 ID 로 쓰일 값
+      client-id: producer-default
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       retries: 5
     consumer:
-      group-id: test-consumer
+      group-id: consumer-default
       auto-offset-reset: latest
       # 컨슈머가 붙었을 때, 내가 원하는 곳부터 땡겨온다.
       # 처음 붙었을 때. ( 다시 붙었을 대. ) 어디부터? 를 결정해야함

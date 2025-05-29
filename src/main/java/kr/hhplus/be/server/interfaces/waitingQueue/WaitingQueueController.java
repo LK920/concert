@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.interfaces.waitingQueue;
 
+import kr.hhplus.be.server.domain.queue.WaitingQueueKafkaService;
 import kr.hhplus.be.server.domain.queue.redis.RedisQueueInfo;
 import kr.hhplus.be.server.domain.queue.redis.RedisQueueStatusResponse;
 import kr.hhplus.be.server.domain.queue.redis.RedisWaitingQueueService;
@@ -16,6 +17,14 @@ import org.springframework.web.bind.annotation.*;
 public class WaitingQueueController implements WaitingQueueApi {
 
     private final RedisWaitingQueueService waitingQueueService;
+
+    private final WaitingQueueKafkaService waitingQueueKafkaService;
+
+    @PostMapping("/enter")
+    public ResponseEntity<String> enterWaitingQueue(@RequestParam("concertId") long concertId, @RequestParam("userId") long userId){
+        waitingQueueKafkaService.createWaitingQueue(userId, concertId);
+        return ResponseEntity.ok("대기열 요청했습니다.");
+    }
 
     @Override
     @GetMapping("/{userId}")
