@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.events;
+package kr.hhplus.be.server.domain.payment.events;
 
 public record PaymentCreatedEvent(
         long userId,

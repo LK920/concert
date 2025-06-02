@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.domain.payment.eventHandler;
 
-import kr.hhplus.be.server.domain.events.PaymentCreatedEvent;
-import kr.hhplus.be.server.domain.events.PointUsedEvent;
+import kr.hhplus.be.server.domain.payment.events.PaymentCreatedEvent;
+import kr.hhplus.be.server.domain.point.events.PointUsedEvent;
 import kr.hhplus.be.server.domain.payment.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.domain.payment.PaymentType;
@@ -11,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 @Slf4j
 @Component
