@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.application.point;
 
 import kr.hhplus.be.server.domain.payment.PaymentInfo;
+import kr.hhplus.be.server.domain.payment.PaymentRepository;
 import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.domain.payment.PaymentType;
 import kr.hhplus.be.server.domain.point.Point;
@@ -18,7 +19,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Transactional
 @ActiveProfiles("test")
 class PointFacadeIntegrationTest {
 
@@ -29,10 +29,13 @@ class PointFacadeIntegrationTest {
     private PaymentService paymentService;
     @Autowired
     private PointRepository pointRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     @BeforeEach
     void setUp(){
         pointRepository.deleteAll();
+        paymentRepository.deleteAll();
     }
 
     @Test
