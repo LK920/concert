@@ -37,7 +37,6 @@ public class WaitingQueueKafkaService {
                 waitingTokenEvent.token(),
                 System.currentTimeMillis()
         );
-
         kafkaMessageProducer.sendActivatedToken(event);
     }
 
