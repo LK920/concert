@@ -23,7 +23,7 @@ public class QueueEventConsumer {
     private final WaitingQueueKafkaService waitingQueueKafkaService;
 
     private final Map<Long, Queue<WaitingTokenEvent>> waitingQueueMap = new ConcurrentHashMap<>();
-    private static final int MAX_ACTIVATE_COUNT = 3;
+    private static final int MAX_ACTIVATE_COUNT = 500;
 
     @KafkaListener(topics = "activated-token", groupId = "activated-group")
     public void activatedTokenConsume(ActivatedTokenEvent event, Acknowledgment ack){
