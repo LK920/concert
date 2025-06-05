@@ -11,11 +11,15 @@ const CONCERT_ID = 1;
 */
 export let options = {
     stages: [
-            { duration: '1m', target: 100 },
-            { duration: '2m', target: 500 },
-            { duration: '2m', target: 500 },
-            { duration: '1m', target: 0 },
-        ],
+        { duration: '1m', target: 100 },
+        { duration: '2m', target: 500 },
+        { duration: '2m', target: 500 },
+        { duration: '1m', target: 0 },
+    ],
+    thresholds: {
+      'http_req_duration': ['p(95)<300'],
+      'http_req_failed': ['rate<0.01'],
+    }
 }
 
 export default function () {

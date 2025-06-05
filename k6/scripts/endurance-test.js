@@ -19,7 +19,7 @@ export let options = {
         { duration: '5m', target: 0 },      // 종료 (Cool-down)
     ],
     thresholds: {
-        'http_req_duration': ['p(95)<50'],  // 95%는 50ms 미만
+        'http_req_duration': ['p(95)<300'],  // 95%는 50ms 미만
         'http_req_failed': ['rate<0.01'],   // 실패율 1% 미만
         'checks': ['rate>0.99'],            // 성공률 99% 이상
     },

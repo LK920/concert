@@ -3,6 +3,20 @@ import { sleep, check } from "k6";
 
 const BASE_URL = "http://host.docker.internal:8080";
 const CONCERT_ID = 1;
+const peak_scenario = [
+    { duration: '1m', target: 100 },
+    { duration: '30s', target: 7500 },
+    { duration: '1m', target: 7500 }, // 1분간 최대 수 유지
+    { duration: '30s', target: 100 },
+    { duration: '7m', target: 100 },
+    /*
+        - vus : 10000,9000 -> k6 137 error (memory 부족(2g))
+        - vus : 8000, 실패율 0.03%
+        - vus : 7700, 실패율 0.03%
+        - vus : 7600, 실패율 0.03%
+        - vus : 7500,
+    */
+];
 
 /*
     - 최고 부하 테스트
@@ -11,21 +25,12 @@ const CONCERT_ID = 1;
     - 선착순 이벤트 등을 준비하면서 정상적으로 서비스를 제공할 수 있을지 파악해 볼 수 있음
 */
 export let options = {
-    stages: [
-        { duration: '10s', target: 0 },
-        { duration: '5s', target: 7600 },
-        /*
-            - vus : 10000,9000 -> k6 137 error (memory 부족(2g))
-            - vus : 8000 -> 실패율이 높음 (0.03%)
-                checks_total.......................: 63353  2496.251876/s
-                checks_succeeded...................: 99.96% 63328 out of 63353
-                checks_failed......................: 0.03%  25 out of 63353
-                ✗ status is 200
-                  ↳  99% — ✓ 63328 / ✗ 25
-            - vus : 7700 에서 실패율 발생 -> 임계점은 7600으로 생각
-        */
-        { duration: '10s', target: 0 },
-    ],
+    stages: peak_scenario,
+    thresholds: {
+        'http_req_failed': ['rate<0.01'],   // 1% 이하 실패율
+        'http_req_duration': ['p(95)<300'], // p95 응답시간 300ms 이하
+        'checks': ['rate>0.99'],            // 성공률 99% 이상
+    },
 };
 
 export default function () {
