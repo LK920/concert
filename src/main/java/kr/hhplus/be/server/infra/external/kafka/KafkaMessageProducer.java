@@ -6,9 +6,11 @@ import kr.hhplus.be.server.domain.queue.events.UserNotifiedEvent;
 import kr.hhplus.be.server.domain.queue.events.WaitingTokenEvent;
 import kr.hhplus.be.server.domain.reservation.events.ReservationCompletedEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class KafkaMessageProducer {
@@ -36,6 +38,7 @@ public class KafkaMessageProducer {
     }
 
     public void sendNotification(UserNotifiedEvent event){
+        log.info("활성화 유저id : {}", event.userId());
         send("notification", String.valueOf(event.userId()), event);
     }
 
