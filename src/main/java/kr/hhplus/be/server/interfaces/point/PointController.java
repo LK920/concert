@@ -24,6 +24,12 @@ public class PointController implements PointApi {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Charges points to a user's account and returns the updated point balance.
+     *
+     * @param request the request containing the user ID and the amount of points to charge
+     * @return a response entity containing the user's updated point information
+     */
     @Override
     @PostMapping("/charge")
     public ResponseEntity<PointResponseDTO> chargeUserPoint(@RequestBody PointRequestDTO request){
@@ -32,6 +38,12 @@ public class PointController implements PointApi {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Handles a POST request to confirm payment for a reserved concert using points.
+     *
+     * @param pointReservationRequest the reservation details provided in the request body
+     * @return a confirmation message indicating the concert was paid for with points
+     */
     @Override
     @PostMapping("/reservation")
     public String usePoint(@RequestBody PointReservationRequest pointReservationRequest) {
