@@ -5,10 +5,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.interfaces.concert.response.ConcertResponseDTO;
 import kr.hhplus.be.server.interfaces.concert.response.ConcertDateResponseDTO;
 import kr.hhplus.be.server.interfaces.concert.response.ConcertSeatResponseDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +19,7 @@ public interface ConcertApi {
     @Operation(summary = "예약 가능한 콘서트를 조회 api")
     @GetMapping("/list")
     default ResponseEntity<List<ConcertResponseDTO>> getConcerts(){
+        // 주
         List<ConcertResponseDTO> mockApi = List.of(
             new ConcertResponseDTO(1l, "concert 1", 50l),
             new ConcertResponseDTO(2l, "concert 2", 50l)
@@ -36,7 +33,7 @@ public interface ConcertApi {
     default ResponseEntity<List<ConcertDateResponseDTO>> getConcertAvailableDates(@PathVariable("concertId") long concertId){
         List<ConcertDateResponseDTO> mockConcertDateList = List.of(
                new ConcertDateResponseDTO(1l, "2025-05-01 22:00:00"),
-                new ConcertDateResponseDTO(2l, "2025-05-02 22:00:00")
+               new ConcertDateResponseDTO(2l, "2025-05-02 22:00:00")
         );
 
         return ResponseEntity.ok(mockConcertDateList);
