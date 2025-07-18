@@ -3,6 +3,7 @@ package kr.hhplus.be.server.interfaces.point;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.interfaces.point.request.PointRequestDTO;
+import kr.hhplus.be.server.interfaces.point.request.PointReservationRequest;
 import kr.hhplus.be.server.interfaces.point.response.PointResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,4 +25,11 @@ public interface PointApi {
         PointResponseDTO mockResponse = new PointResponseDTO(request.userId(), request.amount());
         return ResponseEntity.ok(mockResponse);
     }
+
+    @Operation(summary = "포인트 예약 결제", description = "reservationId와 userId 파라미터로 예약좌석 결제한다.")
+    @PostMapping("/reservation")
+    default String usePoint(@RequestBody PointReservationRequest pointReservationRequest){
+        return "예약 결제가 완료 되었습니다.";
+    }
+
 }
