@@ -1,3 +1,53 @@
+# Project concert-service
+
+## Quick Start
+
+### 1. Prerequisites
+- Docker and Docker Compose installed
+- Java 17+ (for local development)
+- Ports available: 3306 (MySQL), 6379-6382 (Redis), 8080 (Application), 8085 (Kafka UI), 3000 (Grafana)
+
+### 2. Start Services
+```bash
+# Start infrastructure services (MySQL, Redis, Kafka)
+docker-compose up -d
+
+# Build and start the application
+./gradlew build
+docker-compose up -d concert-service
+```
+
+### 3. Performance Testing with k6
+```bash
+# Start monitoring stack (Grafana + InfluxDB)
+cd k6
+docker-compose up -d
+
+# Run performance tests
+docker-compose exec k6 k6 run /k6-root/load-test.js      # Load test
+docker-compose exec k6 k6 run /k6-root/stress-test.js    # Stress test
+docker-compose exec k6 k6 run /k6-root/concert.js        # Concert API test
+
+# View results in Grafana: http://localhost:3000
+```
+
+### 4. API Endpoints
+- **Application**: http://localhost:8080
+- **Kafka UI**: http://localhost:8085  
+- **Grafana Dashboard**: http://localhost:3000
+
+### 5. Cleanup
+```bash
+# Stop all services
+docker-compose down
+cd k6 && docker-compose down
+
+# Remove volumes (optional)
+docker-compose down -v
+```
+
+---
+
 ## 프로젝트
 <details>
 <summary>프로젝트 개요 및 요구사항</summary>
@@ -147,16 +197,3 @@
 ![포인트충전api](./docs/images/mockApi/charge_api.png)
 </div>
 </details>
-
-
-## Getting Started
-
-### Prerequisites
-
-#### Running Docker Containers
-
-`local` profile 로 실행하기 위하여 인프라가 설정되어 있는 Docker 컨테이너를 실행해주셔야 합니다.
-
-```bash
-docker-compose up -d
-```
