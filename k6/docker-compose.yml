@@ -1,5 +1,7 @@
 networks:
   grafana:
+  server-java_default:
+    external: true
 
 services:
   influxdb:
@@ -28,7 +30,9 @@ services:
     image: grafana/k6
     networks:
       - grafana
+      - server-java_default
     volumes:
       - ./scripts:/scripts
+      - .:/k6-root
     environment:
       - K6_OUT=influxdb=http://influxdb:8086/k6

@@ -1,7 +1,7 @@
 import http from "k6/http";
 import { sleep, check } from "k6";
 
-const BASE_URL = "http://host.docker.internal:8080";
+const BASE_URL = "http://concert-service:8080";
 const CONCERT_ID = 1;
 const peak_scenario = [
     { duration: '1m', target: 100 },
